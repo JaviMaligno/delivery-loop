@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+- census: new Start section — run the merge before detecting or asking; anything the merge shows at any level is settled and never asked again; only files the merge lists are profiles. A first-use run with an org profile present skipped the merge, asked which env is production (already an org invariant) and read a set-aside backup file as a profile.
+- deliver phase 5: size never removes reviewers; a trivial run replaced the profile's blocking reviewer with reading its own diff.
+
 ## 0.2.2
 - defaults: transversal rule `decision-change` — acting against a recorded decision (D0.x, plan, answer) needs a new written decision with its source; a live run planned "stop at review state" and then closed the ticket from a memory rule without saying so.
 - deliver phase 8: a promotion that is not ours or is batched closes as an explicit hand-off (reason, owner, prepared material) instead of being skipped silently.

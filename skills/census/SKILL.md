@@ -9,6 +9,11 @@ out: `.delivery/profile.md` at the right levels (grammar `<plugin root>/profile/
 merge: `python "<this skill dir>/../../scripts/merge_profiles.py" --cwd <workspace>`; interpreter `python` → `py -3` → `python3`.
 where: run inside the task workspace (deliver phase 0 creates it first) → repo profile is written and committed on the task branch.
 
+## Start (always, before detecting or asking)
+- run the merge first; its output is the only source of what is already settled. Every field and rule it shows, at any level, is settled: never ask for it, never re-detect it unless a recheck finds a mismatch.
+- profiles are exactly the files the merge lists; other files nearby (backups, drafts, `*.aside`, examples) are not profiles and are not read as such.
+- questions and writes cover only what the merge leaves unresolved for the scope below.
+
 ## Scope
 - task-scoped (default, called from `deliver`): only capabilities this task needs that the merged profile leaves unresolved; exit 4 with upper levels covering the task → write a minimal repo profile (or none) and continue, not a full census.
 - full: first use of the user/org level, or on request → all steps below.
@@ -29,7 +34,7 @@ where: run inside the task workspace (deliver phase 0 creates it first) → repo
    | machine | OS; CPU count; existing user-level limits |
 2. map each finding → capability field; pick best available implementation (e.g. adversarial reviewer on another model if present, else built-in review + subagent). Nothing found → `- kind: none`.
    - procedure facts (deploy/promotion commands, branch flows) → dry-check before writing: remote exists, target branch exists, push would fast-forward (`git merge-base --is-ancestor <target> <source>`). Fails → write the procedure that works (e.g. merge source into target, push the merge) + the evidence in `Source`. Copied from a doc ≠ verified.
-3. ask only what detection cannot settle. Always settled before writing: `environments.production-env` (written `[invariant]`), env safe for e2e. Typical others: approval path for production. One round; one question per datum; 2–4 options, recommended first.
+3. ask only what detection cannot settle and the merge does not already show. Always settled before writing (skip when the merge already has them): `environments.production-env` (written `[invariant]`), env safe for e2e. Typical others: approval path for production. One round; one question per datum; 2–4 options, recommended first.
 4. place each datum at its level:
    | datum | level |
    |---|---|
