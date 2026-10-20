@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+- defaults: transversal rule `decision-change` — acting against a recorded decision (D0.x, plan, answer) needs a new written decision with its source; a live run planned "stop at review state" and then closed the ticket from a memory rule without saying so.
+- deliver phase 8: a promotion that is not ours or is batched closes as an explicit hand-off (reason, owner, prepared material) instead of being skipped silently.
+- deliver phase 9: a final tracker state different from the planned one only under `decision-change`, stated in the report.
+
 ## 0.2.1
 - deliver: description triggers on a ticket id with build/fix intent in any language and says to invoke before touching code; a session given "implementa <ticket>" skipped the skill and redid work already on a local branch.
 - deliver phase 0: ticket-id branch match is case-insensitive and includes local-only branches with unpushed commits.
