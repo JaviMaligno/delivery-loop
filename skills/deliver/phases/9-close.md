@@ -8,6 +8,7 @@ behaviours:
 - evidence (visual where possible) + regression proof are part of the close, not optional.
 - report separates "requested works" (per ID, evidence) from "rest still works" (CI on last commit, neighbour smoke, baseline compare).
 - remove workspaces safely: check for links/junctions inside first; never force.
+- final tracker state differs from the one planned in phase 0 → only under rule `transversal/[decision-change]`, and the report says so.
 - unbacked branches or leftover WIP → say so.
 - durable learnings from escalations → profile at their level.
 
