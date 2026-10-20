@@ -8,6 +8,7 @@ behaviours:
 - order: work state → workspace → census (first use or recheck) in the workspace → re-merge `--cwd <workspace>` → rest.
 - work state from sources, never from tracker state alone (a ticket "not started" may have merged PRs): branches local+remote matching the ticket id case-insensitively (including local-only branches with unpushed commits), PRs (any state), workspaces, deploys, task file, blocking tickets. Entry phase = first phase whose done-when is not met by that evidence; write entry phase + evidence in the task file; earlier phases not redone.
 - other live sessions/agents already on the ticket or its area → ask them before starting; never two writers on one branch.
+- existing task file → read `owner` and the last log time. Session listings miss live sessions: alive = owner answers, or last write recent. Owner silent past the wait deadline → take over: rewrite `owner`, log the takeover with the evidence (uncommitted files, last commit, last log line).
 - repos: cwd is not a repo or the ticket names none → derive from the ticket (paths, components, linked PRs) + candidate repos under cwd/project dir; unclear → ask once. Several repos → one workspace per repo, same branch name, PRs linked to each other.
 - no code change expected (entry phase ≥ 7 on merged work) → no new branch; verify against the deployed SHA, workspace only for task file and evidence.
 - workspace per `vcs.isolation` from fresh base; branch name per `tracker.branch-naming` when a ticket exists; reuse an existing workspace/branch for this task.

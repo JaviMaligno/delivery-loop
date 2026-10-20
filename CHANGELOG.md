@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0
+Frictions from two live runs (a ticket end to end on a client project, and a release session).
+- deliver: task file `owner` + since; log lines timed with `date -u`, written per step; `phase <n> loaded` line; re-merge on entering phases 6 and 7 (a rule changed mid-task and the run kept the stale one).
+- deliver phase 0: resume checks the task file owner and last write; session listings miss live sessions.
+- deliver phase 4: each step closes with a commit (WIP if incomplete) + log line; a dead session lost uncommitted steps.
+- deliver phase 5: diff is the literal `git diff`; a hand-built diff without hunk headers gave false "no tests" findings.
+- deliver phase 6: served check by content (literal of the change, new route ≠404), never "a new file appeared" (two false positives); fallback check when the primary needs missing access; test env down → declared fallback or escalation; owned actions joined, not duplicated.
+- deliver phase 7: fix loop — one fix branch per pass, close on a clean pass (a run spent 4 CI cycles fixing defects one by one); evidence dir from the profile; non-reversible test data recorded with its previous value.
+- deliver phases 8–9: `tracker.done-on-handoff`; squash-merged branches force-deleted only after the host says merged.
+- defaults: authority rules `action-owner` and `waits` (deadline + default; a run stopped waiting for a peer that never answered); fields `tracker.done-on-handoff: no`, `live-verification.evidence-dir`.
+- schema: `environments.test-env`, `fallback-test-env`, `live-verification.evidence-dir`, `· owner` on authority actions.
+
 ## 0.2.3
 - census: new Start section — run the merge before detecting or asking; anything the merge shows at any level is settled and never asked again; only files the merge lists are profiles. A first-use run with an org profile present skipped the merge, asked which env is production (already an org invariant) and read a set-aside backup file as a profile.
 - deliver phase 5: size never removes reviewers; a trivial run replaced the profile's blocking reviewer with reading its own diff.

@@ -11,6 +11,7 @@ behaviours:
 - old test failing because it encodes the defect → amend with reason.
 - parallel subagents only on disjoint files; one writer per workspace; subagents commit, never push.
 - `vcs` rules: explicit add paths, branch check before commit, orchestrator backup-pushes.
+- each plan step closes with a commit (WIP if incomplete) + a log line with its SHA; never leave a finished step uncommitted.
 
 capabilities: vcs, machine.
 absent: no test framework → add the minimal one the stack uses, or escalate if that is a design choice.

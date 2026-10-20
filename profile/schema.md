@@ -41,16 +41,16 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 ## Capabilities
 | section | fields | examples |
 |---|---|---|
-| tracker | kind, read-rule, branch-naming, state-start, state-review, state-done | issue tracker, client document, none <!-- agnostic-ok --> |
+| tracker | kind, read-rule, branch-naming, state-start, state-review, state-done, done-on-handoff (yes\|no) | issue tracker, client document, none <!-- agnostic-ok --> |
 | vcs | host, integration-branch, production-branch, protection, required-approvals, isolation (worktree\|branch), commit-task-file (yes\|no), repo-profile (committed\|local) | GitHub, GitLab, Azure DevOps <!-- agnostic-ok --> |
 | ci | kind, provider, on-draft, on-ready, on-merge, required-checks | hosted CI, none |
-| environments | `<name>: <url> · branch <b>` per env; `production-env: <name> [invariant]` | dev, staging, prod |
-| deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check | platform git integration, pipeline |
+| environments | `<name>: <url> · branch <b>` per env; `test-env: <name>`; `fallback-test-env: <name>`; `production-env: <name> [invariant]` | dev, staging, prod |
+| deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check (primary; fallback when it needs missing access) | platform git integration, pipeline |
 | reviewers | `<n>-<name>: <what> · weight approves\|blocking\|advisory`, ordered by n | human, approving bot, adversarial reviewer on another model, subagent |
-| live-verification | kind, ui, api, data | browser automation, HTTP client, test-DB queries |
+| live-verification | kind, ui, api, data, evidence-dir | browser automation, HTTP client, test-DB queries |
 | channels | kind, approvals, notices | team chat, email, none |
 | machine | test-concurrency, local-forbidden, os | `2`, `builds, servers, containers` |
-| authority | `class-<class>: <policy>`; `<action>: <class>` | `merge-production: test-env` |
+| authority | `class-<class>: <policy>`; `<action>: <class>`; `<action>: <class> · owner <who>` | `merge-production: test-env`, `deploy-test-env: test-env · owner release session` |
 | census | stale-after-days | `30` |
 
 ## Authority
