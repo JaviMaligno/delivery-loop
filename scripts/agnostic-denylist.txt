@@ -1,0 +1,50 @@
+# Public denylist: concrete tools the core must not name.
+# Company and client names never go here: pass them with --denylist from a private repo.
+# fictitious org used in examples/
+acme-corp
+# trackers
+linear
+jira
+# code hosts
+github
+gitlab
+bitbucket
+# deploy platforms / clouds
+railway
+vercel
+aws
+azure
+# test and browser tools
+playwright
+vitest
+pytest
+mailpit
+# chat / docs
+slack
+notion
+# other plugins, CLIs and tool-specific identifiers
+superpowers
+openrouter
+gws
+rtk
+codex
+gitbranchname
+review_diff
+check_standards
+challenge_change
+# more tools
+docker
+jest
+cypress
+selenium
+jenkins
+circleci
+gitea
+heroku
+netlify
+sentry
+datadog
+confluence
+gmail
+outlook
+discord
