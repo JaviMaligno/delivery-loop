@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+- deliver: description triggers on a ticket id with build/fix intent in any language and says to invoke before touching code; a session given "implementa <ticket>" skipped the skill and redid work already on a local branch.
+- deliver phase 0: ticket-id branch match is case-insensitive and includes local-only branches with unpushed commits.
+
 ## 0.2.0
 - deliver phase 0: work state from git, PRs and deploys, never from tracker status alone; entry phase = first phase whose done-when is unmet; ask live sessions already on the ticket.
 - census: dry-check procedure facts (target branch exists, push fast-forwards) before writing them; a doc is not verification.

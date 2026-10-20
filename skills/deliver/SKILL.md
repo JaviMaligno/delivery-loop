@@ -1,6 +1,6 @@
 ---
 name: deliver
-description: Use when a task must be delivered end to end — from a ticket, a client/requirements document or a request to a change verified live in a non-production environment, promoted and closed. Triggers: "implement <ticket>", "build/fix this end to end", "take this to done", a ticket id or URL with intent to build or fix, a requirements document to comply with. Adapts to the environment through layered profiles (tracker, CI, deploy, reviewers, verification tools). Not for read-only questions or exploration without a deliverable.
+description: Use when a task must be delivered end to end — from a ticket, a client/requirements document or a request to a change verified live in a non-production environment, promoted and closed. Triggers, in any language: a ticket id or URL with intent to build, fix or change something ("implement ABC-123", "implementa PROJ-45", "arregla <ticket>", "haz el ticket X"), "build/fix this end to end", "take this to done", a requirements document to comply with. Invoke it before touching code for such a request, even when the change looks small: phase 0 finds work already done and sizes the task, and a trivial size skips spec, gaps and plan. Adapts to the environment through layered profiles (tracker, CI, deploy, reviewers, verification tools). Not for read-only questions or exploration without a deliverable.
 ---
 
 # Deliver
