@@ -36,6 +36,8 @@ Rules:
 - [pre-decisions] Phase 0: one round with what the profile leaves open for this task (real data read/write, human-only checks, actions outside their class) → D0.x in the task file. Unanswered → named escalation, never an assumption.
 - [escalation] One question per decision, 2–4 options, recommended first. Keep working on everything independent of the answer.
 - [answer-routing] Durable answer → profile at its level. Task-only answer → task file.
+- [action-owner] An action with `· owner <who>` is done by that session or person: ask them, join their batch, never run a parallel one.
+- [waits] Before waiting on anyone, write in the task file: what, on whom, deadline (default 30 min), default action at deadline. At deadline → take the default unless it crosses an invariant or an `ask` class; then escalate. A wait never stops independent work.
 
 ## environments
 Rules:
@@ -71,6 +73,12 @@ Rules:
 - [finding-outcome] Each finding: fixed, disputed with proof (file:line, test, output), or deferred with a ticket.
 - [re-review] After fixing blocking findings, review again, passing the previous verdict when the reviewer supports it.
 - [not-approval] An automated pass ≠ a valid approval unless the host counts it.
+
+## tracker
+- done-on-handoff: no
+
+## live-verification
+- evidence-dir: task workspace, untracked
 
 ## census
 - stale-after-days: 30

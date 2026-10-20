@@ -11,7 +11,8 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 2. merged profile = authority for this task; each item tagged `← Ln`.
 3. phase 0 creates the workspace → re-merge with `--cwd <workspace>`; that merge is the one that rules.
    - resume: phase 0 finds the entry phase from evidence (branches, PRs, deploys), not from the tracker state; work can start at any phase.
-4. load `phases/<n>-*.md` when entering phase n; never all at once.
+4. load `phases/<n>-*.md` when entering phase n; never all at once; log `phase <n> loaded` in the task file.
+5. re-merge on entering phases 6 and 7: rules can change mid-task. Diff against the ruling merge → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
 
 ## Phases
 | # | phase | done-when (summary) |
@@ -35,11 +36,15 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 | large | 0–9; phase 1 baseline inventory + parallel readers + completeness critic; phase 3 one plan per PR, human checkpoint between PRs |
 
 ## Task file
-`.delivery/tasks/<slug>.md`: size+reason · mini-inventory (trivial) · D0.x · escalations + answers · phase log (phase, evidence pointer).
+`.delivery/tasks/<slug>.md`: `owner: <session name> · since <UTC>` · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · phase log.
+- log line: `<UTC from date -u> · phase <n> · <what> · <evidence pointer>`; never a time from memory.
+- written as each step closes, not at phase end: a session can die mid-phase.
 
 ## Authority
 - action → class → policy: merged `## authority` (`<action>: <class>`, `class-<class>: <policy>`).
 - `ask-never` → act. `ask` / `show-text-first` → one question, 2–4 options, recommended first; continue independent work meanwhile.
+- action with `· owner <who>` (another session or person) → coordinate with the owner, don't act; rule `authority/[action-owner]`.
+- waiting on anyone (owner, peer session, human) → rule `authority/[waits]`: deadline + default written before waiting.
 - answer → profile if durable, else task file.
 - invariants never crossed, even if asked mid-task → state the invariant and its level.
 

@@ -1,6 +1,6 @@
 # Phase 5 — review
 
-in: full branch diff (real, not summarised; split by whole files if large) + spec (ticket / plan / PR body).
+in: full branch diff + spec (ticket / plan / PR body). Diff = literal output of `git diff <base>...HEAD` (split by whole files if large); never summarised, reconstructed or hand-edited: a diff without hunk headers reads as "no tests".
 out: verdict per reviewer in `reviewers` order; each finding: fixed | disputed with proof | deferred with ticket.
 done-when: no blocking finding open; re-review done after blocking fixes.
 
