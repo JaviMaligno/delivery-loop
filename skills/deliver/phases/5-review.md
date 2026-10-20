@@ -9,6 +9,7 @@ behaviours:
 - verify each finding before acting; a fix must not reintroduce the pattern it corrects.
 - never send lockfiles, generated files or secrets.
 - automated pass ≠ approval unless the host counts it.
+- size never removes reviewers: a trivial diff still goes through every reviewer the merged profile lists. Reading your own diff is not a reviewer.
 
 capabilities: reviewers.
 absent: reviewers none → built-in code review + one fresh subagent with the spec.
