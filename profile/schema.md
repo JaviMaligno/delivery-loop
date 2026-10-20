@@ -33,6 +33,7 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | org | dir grouping the org's repos | `tracker`, `vcs`/`ci` conventions, `reviewers`, `channels` |
 | project | dir grouping a client/product's repos | project exceptions |
 | repo | `<repo>/.delivery/profile.md`, committed | `environments`, `deploy`, concrete `ci` |
+| repo (local) | `<git common dir>/delivery/profile.md`, never committed, shared by worktrees; after the committed repo level | same, for repos where delivery files must not be versioned (`vcs.repo-profile: local`) |
 
 - `~/.delivery/profile.md` = invalid → use user level.
 - above the repo's git toplevel, dirs that are git roots are skipped and listed under `## Skipped`.
@@ -41,7 +42,7 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | section | fields | examples |
 |---|---|---|
 | tracker | kind, read-rule, branch-naming, state-start, state-review, state-done | issue tracker, client document, none <!-- agnostic-ok --> |
-| vcs | host, integration-branch, production-branch, protection, required-approvals, isolation (worktree\|branch), commit-task-file (yes\|no) | GitHub, GitLab, Azure DevOps <!-- agnostic-ok --> |
+| vcs | host, integration-branch, production-branch, protection, required-approvals, isolation (worktree\|branch), commit-task-file (yes\|no), repo-profile (committed\|local) | GitHub, GitLab, Azure DevOps <!-- agnostic-ok --> |
 | ci | kind, provider, on-draft, on-ready, on-merge, required-checks | hosted CI, none |
 | environments | `<name>: <url> · branch <b>` per env; `production-env: <name> [invariant]` | dev, staging, prod |
 | deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check | platform git integration, pipeline |

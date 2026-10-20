@@ -1,6 +1,6 @@
 """Fail if the plugin core names a concrete tool, company or client.
 
-Scans every text file in the repo except docs/, tests/, .git/, .github/ and the denylist (agnostic-ok)
+Scans every text file in the repo except docs/, tests/, .git/, .github/, evals/results/ and the denylist (agnostic-ok)
 files. examples/ is checked only against extra --denylist terms (it may name
 tools, never a real org). URLs and lines containing `agnostic-ok` are ignored.
 Terms: scripts/agnostic-denylist.txt (public: tool names) plus every extra
@@ -17,6 +17,7 @@ from typing import Callable
 
 EXEMPT_DIRS = {"docs", "tests", ".git", ".github", "__pycache__"}  # agnostic-ok
 TOOLS_ALLOWED_DIRS = {"examples"}
+GENERATED_DIR = ("evals", "results")
 TEXT_SUFFIXES = {".md", ".py", ".json", ".txt", ".yml", ".yaml", ".toml", ".sh", ".js", ".mjs", ".ts"}
 ALLOW_MARK = "agnostic-ok"
 URL_RE = re.compile(r"https?://\S+")
@@ -43,7 +44,7 @@ def scanned_files(root: Path, exempt: set[Path]) -> list[Path]:
         rel = path.relative_to(root)
         if not path.is_file() or path.suffix not in TEXT_SUFFIXES or path.resolve() in exempt:
             continue
-        if EXEMPT_DIRS & set(rel.parts[:-1]):
+        if EXEMPT_DIRS & set(rel.parts[:-1]) or rel.parts[:2] == GENERATED_DIR:
             continue
         files.append(path)
     return sorted(files, key=lambda p: p.relative_to(root).as_posix())

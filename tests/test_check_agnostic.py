@@ -53,6 +53,11 @@ class CheckAgnosticTest(unittest.TestCase):
         self.assertEqual(self.check(), [".claude-plugin/plugin.json:1: widgetci",
                                         "README.md:1: widgetci", "hooks/guard.sh:1: widgetci"])
 
+    def test_eval_results_are_exempt_but_eval_cases_are_scanned(self):
+        self.write("evals/results/run.json", '{"v": "widgetci"}\n')
+        self.write("evals/case/prompt.md", "use widgetci\n")
+        self.assertEqual(self.check(), ["evals/case/prompt.md:1: widgetci"])
+
     def test_urls_are_ignored(self):
         self.write(".claude-plugin/plugin.json", '{"repository": "https://widgetci.example/x"}\n')
         self.assertEqual(self.check(), [])
