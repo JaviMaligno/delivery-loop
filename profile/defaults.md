@@ -50,6 +50,7 @@ Rules:
 ## vcs
 - isolation: worktree
 - commit-task-file: no
+- repo-profile: committed
 Rules:
 - [fresh-base] Isolated workspace from the freshly fetched base branch.
 - [no-stash] Never stash; set work aside with a WIP commit.
@@ -83,5 +84,6 @@ Rules:
 - [old-tests] A test that encodes the defect is amended with the reason; never trim the fix to go green.
 - [scope] Nothing more, nothing less than the agreed scope; extras → deferred list.
 - [check-blockers] Probe before declaring something missing, blocked or impossible.
+- [state-at-source] Work state comes from git, PRs and deploys; a tracker status or a document is a hint, not evidence.
 - [precedence] Source > spec > plan > code.
 - [report] Report: decided+why · open with recommendation · assumed · out of scope · where to look.

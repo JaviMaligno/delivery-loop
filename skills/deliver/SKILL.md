@@ -10,6 +10,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
    - exit 1 → fix the named `file:line`. exit 3/4 → census after the workspace exists (phase 0).
 2. merged profile = authority for this task; each item tagged `← Ln`.
 3. phase 0 creates the workspace → re-merge with `--cwd <workspace>`; that merge is the one that rules.
+   - resume: phase 0 finds the entry phase from evidence (branches, PRs, deploys), not from the tracker state; work can start at any phase.
 4. load `phases/<n>-*.md` when entering phase n; never all at once.
 
 ## Phases

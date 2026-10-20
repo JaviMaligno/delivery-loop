@@ -224,6 +224,27 @@ class DiscoverTest(unittest.TestCase):
         self.assertEqual(found.skipped, [skipped.resolve()])
         self.assertTrue(found.repo_level)
 
+    def test_local_repo_profile_in_git_common_dir_is_nearest_level(self):
+        repo = self.root / "repo"
+        (repo / ".git").mkdir(parents=True)
+        committed = write(repo, ".delivery/profile.md", "## ci\n")
+        local = write(repo, ".git/delivery/profile.md", "## deploy\n")
+        found = mp.discover(repo, self.root / "nohome")
+        self.assertEqual(found.paths, [committed.resolve(), local.resolve()])
+        self.assertTrue(found.repo_level)
+
+    def test_local_repo_profile_is_shared_by_worktrees(self):
+        main = self.root / "repo"
+        (main / ".git/worktrees/wt-x").mkdir(parents=True)
+        (main / ".git/worktrees/wt-x/commondir").write_text("../..\n", encoding="utf-8")
+        local = write(main, ".git/delivery/profile.md", "## deploy\n")
+        worktree = self.root / "repo-wt-x"
+        worktree.mkdir()
+        (worktree / ".git").write_text(f"gitdir: {(main / '.git/worktrees/wt-x').as_posix()}\n", encoding="utf-8")
+        found = mp.discover(worktree, self.root / "nohome")
+        self.assertEqual(found.paths, [local.resolve()])
+        self.assertTrue(found.repo_level)
+
     def test_dedupe_uses_case_insensitive_normcase_on_windows(self):
         paths = [Path("C:/Work/Repo/.delivery/profile.md"), Path("c:/work/repo/.delivery/profile.md")]
         self.assertEqual(len(mp.dedupe(paths, ntpath.normcase)), 1)
