@@ -2,7 +2,8 @@
 
 Levels, far to near: L0 the plugin defaults (profile/defaults.md), the user file
 (~/.claude/delivery/profile.md), then every .delivery/profile.md from the
-filesystem root down to the working directory.
+filesystem root down to the working directory, then the local repo profile
+(<git common dir>/delivery/profile.md: never committed, shared by worktrees).
 Fields: nearest level wins unless locked with [invariant]. Rules: by id within
 a section; nearest wins unless an invariant with that id exists in any section.
 Grammar: profile/schema.md.
@@ -31,6 +32,7 @@ RESERVED_SECTIONS = {"conflicts", "skipped"}
 DEFAULTS = Path(__file__).resolve().parent.parent / "profile" / "defaults.md"
 USER_FILE = Path(".claude") / "delivery" / "profile.md"
 LEVEL_FILE = Path(".delivery") / "profile.md"
+LOCAL_REPO_FILE = Path("delivery") / "profile.md"
 
 
 class ProfileError(Exception):
@@ -211,6 +213,24 @@ def _git_toplevel(cwd: Path) -> Path | None:
     return None
 
 
+def _git_common_dir(toplevel: Path) -> Path | None:
+    dot_git = toplevel / ".git"
+    if dot_git.is_dir():
+        return dot_git
+    if not dot_git.is_file():
+        return None
+    line = dot_git.read_text(encoding="utf-8").strip()
+    if not line.startswith("gitdir:"):
+        return None
+    gitdir = Path(line[len("gitdir:"):].strip())
+    if not gitdir.is_absolute():
+        gitdir = toplevel / gitdir
+    commondir = gitdir / "commondir"
+    if commondir.is_file():
+        return (gitdir / commondir.read_text(encoding="utf-8").strip()).resolve()
+    return gitdir.resolve()
+
+
 def discover(cwd: Path, home: Path) -> Discovery:
     cwd, home = cwd.resolve(), home.resolve()
     found: list[Path] = []
@@ -231,6 +251,11 @@ def discover(cwd: Path, home: Path) -> Discovery:
             continue
         found.append(candidate)
     repo_level = bool(toplevel) and (toplevel / LEVEL_FILE).is_file()
+    common = _git_common_dir(toplevel) if toplevel else None
+    local = common / LOCAL_REPO_FILE if common else None
+    if local and local.is_file():
+        found.append(local.resolve())
+        repo_level = True
     return Discovery(dedupe(found), skipped, toplevel, repo_level)
 
 
