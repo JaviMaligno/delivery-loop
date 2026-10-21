@@ -29,7 +29,9 @@ LOCK_RE = re.compile(r"\s*\[invariant\]$", re.IGNORECASE)
 FENCE = "```"
 RULES_MARK = "Rules:"
 SOURCE_PREFIX = "Source:"
-RESERVED_SECTIONS = {"conflicts", "skipped"}
+RESERVED_SECTIONS = {"conflicts", "skipped", "missing"}
+REQUIRED_FIELDS = [("environments", "production-env"), ("environments", "test-env")]
+ABSENT_KEY, ABSENT_VALUE = "kind", "none"
 DEFAULTS = Path(__file__).resolve().parent.parent / "profile" / "defaults.md"
 USER_FILE = Path(".claude") / "delivery" / "profile.md"
 LEVEL_FILE = Path(".delivery") / "profile.md"
@@ -84,10 +86,12 @@ def parse(text: str, path: str) -> dict[str, Section]:
     current: Section | None = None
     in_rules = False
     in_fence = False
+    after_bullet = False
     for lineno, raw in enumerate(text.lstrip("﻿").splitlines(), start=1):
         line = raw.strip()
         if line.startswith(FENCE):
             in_fence = not in_fence
+            after_bullet = False
             continue
         if in_fence:
             continue
@@ -99,17 +103,24 @@ def parse(text: str, path: str) -> dict[str, Section]:
                 raise ProfileError(f"{where}: section name '{name}' is reserved")
             current = sections.setdefault(name, Section())
             in_rules = False
+            after_bullet = False
             continue
         if current is None:
             continue
         if line == RULES_MARK:
             in_rules = True
+            after_bullet = False
             continue
         if line.startswith(SOURCE_PREFIX):
             current.source = line[len(SOURCE_PREFIX):].strip()
+            after_bullet = False
             continue
         if not line.startswith("- "):
+            if line and after_bullet:
+                raise ProfileError(f"{where}: line continues the bullet above; a bullet is one line")
+            after_bullet = False
             continue
+        after_bullet = True
         if in_rules:
             _parse_rule(current, line, where)
         else:
@@ -187,6 +198,17 @@ def _merge_rule(merged: Merged, name: str, target: MergedSection, rule: Rule, la
             target.rules[index] = (rule, label)
             return
     target.rules.append((rule, label))
+
+
+def missing(merged: Merged) -> list[str]:
+    """Required fields no level sets; a section with `- kind: none` declares the capability absent."""
+    out: list[str] = []
+    for name, key in REQUIRED_FIELDS:
+        section = merged.sections.get(name, MergedSection())
+        absent = section.fields.get(ABSENT_KEY, ("",))[0] == ABSENT_VALUE
+        if key not in section.fields and not absent:
+            out.append(f"{name}/{key}")
+    return out
 
 
 def _conflict(item: str, kept: str, rejected: str, invariant: str | None = None) -> str:
@@ -319,6 +341,10 @@ def render(merged: Merged, levels: list[tuple[str, str]], skipped: list[str] | N
     if merged.conflicts:
         out += ["", "## Conflicts"]
         out += [f"- {c}" for c in merged.conflicts]
+    unset = missing(merged)
+    if unset:
+        out += ["", "## Missing", "required fields no level sets (census, or `- kind: none` in the section):"]
+        out += [f"- {m}" for m in unset]
     if skipped:
         out += ["", "## Skipped", "git roots above the repo (nested worktree or cloned profile repo):"]
         out += [f"- {s}" for s in skipped]

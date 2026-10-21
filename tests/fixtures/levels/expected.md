@@ -37,3 +37,7 @@ Source: deploy config · checked 2026-10-20 ← L4
 
 ## Conflicts
 - environments/production-env: invariant from L0 kept; L3 tried to change it
+
+## Missing
+required fields no level sets (census, or `- kind: none` in the section):
+- environments/test-env

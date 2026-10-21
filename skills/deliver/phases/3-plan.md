@@ -1,7 +1,7 @@
 # Phase 3 — plan
 
 in: inventory + gap log + real code read (paths the change touches, callers, sibling paths) + task file.
-out: plan: small steps, each with IDs covered + its test · `Out of scope` section (always) · D0.x embedded.
+out: plan in the delivery dir: small steps, each with IDs covered + its test · `Out of scope` section (always) · D0.x embedded.
 done-when: reviewed by an agent (another model family if available); every non-blocked ID has ≥1 step.
 
 behaviours:

@@ -3,11 +3,13 @@
 file: `.delivery/profile.md` per level; user level `~/.claude/delivery/profile.md`; L0 = plugin `profile/defaults.md`.
 merge: `python "<plugin root>/scripts/merge_profiles.py" --cwd <workspace>` → merged profile, each item tagged `← Ln`. Never merge by hand.
 exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0 · 4 git repo without repo-level profile → 3/4 run `census`.
+required: `environments.production-env`, `environments.test-env` (or `- kind: none` in `environments`); unset → listed under `## Missing` in the output, exit unchanged.
 
 ## Grammar
 - keywords in English, content in any language. UTF-8 (BOM tolerated), LF or CRLF.
-- `## <section>` → lowercased. Capabilities below + extra sections (`transversal`, `census`). Reserved: `conflicts`, `skipped`.
+- `## <section>` → lowercased. Capabilities below + extra sections (`transversal`, `census`). Reserved: `conflicts`, `skipped`, `missing`.
 - field `- key: value` → key kebab-case; split on first `": "`; one line; non-empty; duplicate key in a file = error.
+- a bullet is one line: a non-empty line right after a bullet that is not a bullet, heading, `Rules:` or `Source:` = error (a wrapped rule would be cut silently).
 - locked field `- key: value [invariant]` (any case) → lower levels cannot change it.
 - list = one key per item: `- dev: <url> · branch <b>`. Never multi-line.
 - absent capability: `- kind: none` in that section.
@@ -44,7 +46,7 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | section | fields | examples |
 |---|---|---|
 | tracker | kind, read-rule, branch-naming, state-start, state-review, state-done, done-on-handoff (yes\|no) | issue tracker, client document, none <!-- agnostic-ok --> |
-| vcs | host, integration-branch, production-branch, protection, required-approvals, isolation (worktree\|branch), commit-task-file (yes\|no), repo-profile (committed\|local) | GitHub, GitLab, Azure DevOps <!-- agnostic-ok --> |
+| vcs | host, integration-branch, production-branch, protection, required-approvals, isolation (worktree\|branch), delivery-dir (default outside every tree), repo-profile (committed\|local) | GitHub, GitLab, Azure DevOps <!-- agnostic-ok --> |
 | ci | kind, provider, on-draft, on-ready, on-merge, required-checks | hosted CI, none |
 | environments | `<name>: <url> · branch <b>` per env; `test-env: <name>`; `fallback-test-env: <name>`; `production-env: <name> [invariant]` | dev, staging, prod |
 | deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check (primary; fallback when it needs missing access) | platform git integration, pipeline |

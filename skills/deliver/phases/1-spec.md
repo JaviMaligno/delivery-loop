@@ -1,7 +1,7 @@
 # Phase 1 — spec
 
 in: full source — ticket per `tracker.read-rule` (default: description + comments + attachments + linked docs) | whole document | request.
-out: inventory (skill `spec`): stable IDs, verbatim quotes, surface, status.
+out: inventory (skill `spec`, written in the delivery dir): stable IDs, verbatim quotes, surface, status.
 done-when: every source point has an ID or an exclusion reason.
 
 behaviours:

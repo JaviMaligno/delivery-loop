@@ -37,6 +37,7 @@ Rules:
 - [escalation] One question per decision, 2–4 options, recommended first. Keep working on everything independent of the answer.
 - [answer-routing] Durable answer → profile at its level. Task-only answer → task file.
 - [action-owner] An action with `· owner <who>` is done by that session or person: ask them, join their batch, never run a parallel one.
+- [release-owner] `merge-production` with `· owner <who>` (a release process, another team, the client) → phase 8 is a hand-off stated as a fact: what is pending release, from which SHA, owned by whom. No question and no recommendation about the release itself; the report lists it under handed off, not under open.
 - [waits] Before waiting on anyone, write in the task file: what, on whom, deadline (default 30 min), default action at deadline. At deadline → take the default unless it crosses an invariant or an `ask` class; then escalate. A wait never stops independent work.
 
 ## environments
@@ -51,7 +52,7 @@ Rules:
 
 ## vcs
 - isolation: worktree
-- commit-task-file: no
+- delivery-dir: `<git common dir>/delivery/tasks/<slug>/`
 - repo-profile: committed
 Rules:
 - [fresh-base] Isolated workspace from the freshly fetched base branch.
@@ -61,6 +62,7 @@ Rules:
 - [check-branch] Check the current branch right before each commit.
 - [backup-push] Orchestrator pushes the branch as soon as it has commits worth keeping; subagents commit, never push.
 - [merged-means-deleted] After a verified merge: delete remote+local branch, remove workspace.
+- [delivery-dir] Task file, spec, gaps, plan, QA plan and evidence of a task live in `vcs.delivery-dir`: outside every working tree (never versioned, never pushed, survives workspace removal, shared by worktrees). A profile may point it into the tree only when delivery files are meant to be versioned.
 
 ## ci
 Rules:
@@ -78,7 +80,7 @@ Rules:
 - done-on-handoff: no
 
 ## live-verification
-- evidence-dir: `.delivery/tasks/<slug>/` in the main checkout, untracked
+- evidence-dir: `<delivery-dir>/evidence/`
 
 ## census
 - stale-after-days: 30

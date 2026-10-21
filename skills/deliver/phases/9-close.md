@@ -8,7 +8,9 @@ behaviours:
 - evidence (visual where possible) + regression proof are part of the close, not optional.
 - report separates "requested works" (per ID, evidence) from "rest still works" (CI on last commit, neighbour smoke, baseline compare).
 - delete a squash-merged branch: local git cannot see it as merged → confirm the PR state is merged at the host, then force-delete local; never force-delete on git's word alone.
-- remove workspaces safely: check for links/junctions inside first; never force. Task file or evidence still inside → move them out first, then remove; never leave a workspace behind to keep them.
+- remove workspaces safely: check for links/junctions inside first; never force. The delivery dir is outside them and stays; anything of the task still inside a workspace (legacy layout) → move it to the delivery dir first; never leave a workspace behind to keep it.
+- evidence linked from the ticket and PR (attach the captures the ticket needs: the delivery dir is local to this machine).
+- `pending cleanup` lines in the task file: none left, or each written in the ticket.
 - final tracker state differs from the one planned in phase 0 → only under rule `transversal/[decision-change]`, and the report says so.
 - unbacked branches or leftover WIP → say so.
 - durable learnings from escalations → profile at their level.
