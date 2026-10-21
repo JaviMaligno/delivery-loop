@@ -273,6 +273,16 @@ class DiscoverTest(unittest.TestCase):
         found = mp.discover(repo, self.root / "nohome")
         self.assertEqual(found.paths, [org.resolve(), project.resolve(), local.resolve()])
 
+    def test_project_linked_from_local_profile_goes_before_the_committed_repo_profile(self):
+        project = write(self.root, "clients/acme/.delivery/profile.md", "## environments\n")
+        repo = self.root / "work/repo"
+        (repo / ".git").mkdir(parents=True)
+        committed = write(repo, ".delivery/profile.md", "## deploy\n")
+        local = write(repo, ".git/delivery/profile.md",
+                      f"## levels\n- project: {(self.root / 'clients/acme').as_posix()}\n")
+        found = mp.discover(repo, self.root / "nohome")
+        self.assertEqual(found.paths, [project.resolve(), committed.resolve(), local.resolve()])
+
     def test_linked_project_path_is_relative_to_repo_root(self):
         project = write(self.root, "clients/acme/.delivery/profile.md", "## environments\n")
         repo = self.root / "work/repo"

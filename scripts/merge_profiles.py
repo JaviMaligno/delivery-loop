@@ -291,10 +291,14 @@ def discover(cwd: Path, home: Path) -> Discovery:
     for profile in list(found):
         if _same(profile, user_file):
             continue
-        base = toplevel if local and _same(profile, local.resolve()) else profile.parent.parent
+        is_local = bool(local) and _same(profile, local.resolve())
+        base = toplevel if is_local else profile.parent.parent
         project = _linked_project(profile, base)
         if project and not any(_same(project, p) for p in found):
-            found.insert(next(i for i, p in enumerate(found) if _same(p, profile)), project)
+            # a project ranks below every level of the repo: linked from the local repo profile, it still
+            # goes before the committed repo profile
+            anchor = committed.resolve() if is_local and repo_files and _same(repo_files[0], committed) else profile
+            found.insert(next(i for i, p in enumerate(found) if _same(p, anchor)), project)
     return Discovery(dedupe(found), skipped, toplevel, repo_level, [f.resolve() for f in repo_files])
 
 

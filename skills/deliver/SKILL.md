@@ -6,7 +6,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 # Deliver
 
 ## Start
-1. merge: `python "<dir of this SKILL.md>/../../scripts/merge_profiles.py" --cwd <dir>`; interpreter `python` → `py -3` → `python3`.
+1. merge: `python "<dir of this SKILL.md>/../../scripts/merge_profiles.py" --cwd <dir>`; `python` = the interpreter the phase 0 preflight resolved (before it: the first of `python`, `py -3`, `python3` that runs).
    - exit 1 → fix the named `file:line`. exit 3/4 → census after the workspace exists (phase 0).
    - `## Missing` → task-scoped census for those fields in phase 0; never reach phase 6 or 7 with them unset.
 2. merged profile = authority for this task; each item tagged `← Ln`.
@@ -40,11 +40,11 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 `vcs.delivery-dir` (default `<git common dir>/delivery/tasks/<slug>/`, rule `vcs/[delivery-dir]`): created in phase 0, before any workspace; holds everything the task writes that is not the change itself:
 - `task.md` (task file) · `merge-<n>.md` (saved merges) · spec, gaps, deferred and review docs (skill `spec`) · plan · QA plan (skill `qa-design`) · `evidence/`.
 - git common dir = the repo the ticket belongs to; that repo is not checked out or not ours → the repo the session runs in.
-- delivery skills invoked from `deliver` write here, never in `docs/` or the worktree; legacy location (`.delivery/tasks/<slug>.md` in a checkout) → read it on resume, move it here.
+- delivery skills (`spec`, `qa-design`, `qa-execution`) write here, never in `docs/` or the worktree.
 
 ## Task file
-`<delivery-dir>/task.md`, created by `python "<dir of this SKILL.md>/../../scripts/task_log.py" <task.md> --owner <session name>` (skeleton + `owner: … · since <UTC>`): size+reason · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · pending cleanup · phase log.
-- every time in it (creation, owner change, log line) comes from the script, never typed by hand. Log line: `python "<dir of this SKILL.md>/../../scripts/task_log.py" <task.md> <n> "<what>" [<evidence pointer>]`, which takes the time from the clock; never typed by hand.
+`<delivery-dir>/task.md`, created by `python "<dir of this SKILL.md>/../../scripts/task_log.py" <task.md> --owner <session name>` (skeleton + `owner: … · since <UTC>`): size+reason · preflight · mini-inventory (trivial) · D0.x · escalations + answers · waits · pending cleanup · phase log.
+- every time in it comes from the script (creation, owner change, log line `task_log.py <task.md> <n> "<what>" [<evidence pointer>]`), never typed by hand.
 - written as each step closes, not at phase end: a session can die mid-phase.
 - one line per phase of the size path, skipped ones included with their reason; a feature log with no line for 1–3 means they did not run.
 

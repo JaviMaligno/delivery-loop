@@ -13,6 +13,7 @@ required: `environments.production-env`, `environments.test-env` (or `- kind: no
 - locked field `- key: value [invariant]` (any case) → lower levels cannot change it.
 - list = one key per item: `- dev: <url> · branch <b>`. Never multi-line.
 - absent capability: `- kind: none` in that section.
+- `fallback: <substitute> · accepted <date>` in any capability section: what the preflight uses when that capability fails (rule `authority/[preflight]`).
 - `Rules:` line → following `- ` bullets are rules: `- [id] text` | `- [invariant id] text`. id kebab-case, unique per section per file. Bullet without id = error.
 - `Source: <where> · checked <YYYY-MM-DD>` → provenance; nearest level wins.
 - ignored: text outside `- ` bullets, other bullet markers, fenced code blocks.
@@ -50,7 +51,7 @@ required: `environments.production-env`, `environments.test-env` (or `- kind: no
 | ci | kind, provider, on-draft, on-ready, on-merge, required-checks | hosted CI, none |
 | environments | `<name>: <url> · branch <b>` per env; `test-env: <name>`; `fallback-test-env: <name>`; `production-env: <name> [invariant]` | dev, staging, prod |
 | deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check (primary; fallback when it needs missing access) | platform git integration, pipeline |
-| reviewers | `<n>-<name>: <what> · weight approves\|blocking\|advisory`, ordered by n | human, approving bot, adversarial reviewer on another model, subagent |
+| reviewers | `<n>-<name>: <what> · weight approves\|blocking\|advisory · on diff\|plan\|both` (default diff), ordered by n | human, approving bot, adversarial reviewer on another model, subagent |
 | live-verification | kind, ui (personal tool choice → user level; may list fallbacks), api, data, evidence-dir, test-identity (account(s) tests act as · how it logs in) | browser automation, HTTP client, test-DB queries |
 | channels | kind, approvals, notices | team chat, email, none |
 | machine | test-concurrency, local-forbidden, os | `2`, `builds, servers, containers` |

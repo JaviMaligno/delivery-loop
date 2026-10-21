@@ -34,10 +34,10 @@ Rules:
 - [class-moves] Move an action with `<action>: <class>` at a lower level; new action keys allowed. Never move an action that touches production into an ask-never class.
 - [production-path] merge-production follows `channels.approvals` / `reviewers` weight approves when the profile defines them; else ask.
 - [pre-decisions] Phase 0: one round with what the profile leaves open for this task (real data read/write, human-only checks, actions outside their class) → D0.x in the task file. Unanswered → named escalation, never an assumption.
-- [escalation] One question per decision, 2–4 options, recommended first. Keep working on everything independent of the answer.
+- [escalation] One question per decision, 2–4 options, recommended first, each checked against the context it lands in (what else the product or system says about the same thing). Keep working on everything independent of the answer.
 - [answer-routing] Durable answer → profile at its level. Task-only answer → task file.
-- [action-owner] An action with `· owner <who>` is done by that session or person: ask them, join their batch, never run a parallel one.
-- [release-owner] `merge-production` with `· owner <who>` (a release process, another team, the client) → phase 8 is a hand-off stated as a fact: what is pending release, from which SHA, owned by whom. No question and no recommendation about the release itself; the report lists it under handed off, not under open.
+- [action-owner] An action with `· owner <who>` is done by that session or person: ask them, join their batch, never run a parallel one. Owned action outside this task (a release, another team, the client) → hand-off stated as a fact: what, from which SHA, owner; listed under handed off, no question and no recommendation about it.
+- [preflight] Phase 0 probes every capability the task will use with a real call (configured ≠ authenticated ≠ exposed to this session ≠ working), and local check tools at the version the repo or CI pins. Each failure, in one round: the substitute the profile already accepted (`<capability>.fallback`) first; else alternatives found before asking (never an empty question); then «fix now (how) or continue without (substitute, what stays uncovered)». The answer is saved as `fallback` at its level (personal setup → user) so the next run does not ask again.
 - [waits] Before waiting on anyone, write in the task file: what, on whom, deadline (default 30 min), default action at deadline. At deadline → take the default unless it crosses an invariant or an `ask` class; then escalate. A wait never stops independent work.
 
 ## environments

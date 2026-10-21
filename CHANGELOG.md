@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0
+From a run in a second harness, a client feature run, and an audit of every clause against the runs that motivated it.
+- deliver phase 0: preflight (rule `authority/[preflight]`). Every capability the task will use is probed with a real call (configured ≠ authenticated ≠ exposed ≠ working), local check tools at the version the repo or CI pins; failures go in one round, offering the substitute already accepted (`<capability>.fallback`) or alternatives found first, and the answer is saved so the next run does not ask. Setup problems stop being frictions found one by one mid-task (fifteen in one run).
+- observation after promotion: when the change reaches production only at phase 8 (no non-production env), phase 6 closes stating it, phase 8 starts with stimulus IDs verified, observation IDs stay 🔄 and are verified after the promotion.
+- merge: a project linked from the local repo profile now ranks below the committed repo profile too (it overrode it).
+- reviewers declare what they take (`· on diff|plan|both`); phase 3 uses those that take a plan.
+- census: operational facts are per repo; a repo that differs from its project writes its own values.
+- escalation options are checked against the context they land in (a proposed label contradicted what the same screen already said).
+- pruned or generalised, after an audit against the CHANGELOG: qa-design's "not observable live → test → ⚠️" exit (contradicted 0.6 and project rules); spec/qa-design writing to `docs/` when run outside deliver (they always use the delivery dir now); the browser-viewport check (a tool's behaviour → user profile); the 0.4.2 legacy task location; `release-owner` folded into `action-owner`; two app-specific bug-hunt rows; tool- and machine-specific wording in phases 0, 4, 5, 6, 9 and census; duplicates of default rules.
+
 ## 0.6.1
 - Codex: `.codex-plugin/plugin.json` + `.agents/plugins/marketplace.json` over the same `skills/`; `$deliver <ticket>` invokes it. A test keeps names and versions of both harnesses' manifests in sync. Skills name script paths relative to "the dir of this SKILL.md" instead of a harness placeholder. <!-- agnostic-ok -->
 - `task_log.py --owner <session>` creates the task file skeleton with its time from the clock, or takes it over (rewrites `owner`, logs the change). A run wrote the header's time by hand because the script only appended log lines.

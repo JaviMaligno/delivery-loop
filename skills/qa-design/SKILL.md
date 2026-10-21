@@ -5,7 +5,7 @@ description: Use to turn a spec inventory or reference document (client feedback
 
 # QA design
 
-out: `<feature>-qa-plan.md` in the task's delivery dir when invoked from `deliver`; else `docs/qa-evidence/<YYYY-MM-DD>/`. Plans only; captures nothing; does not pick capture tools.
+out: `<feature>-qa-plan.md` in `vcs.delivery-dir`, with or without `deliver`. Plans only; captures nothing; does not pick capture tools.
 in: inventory (skill `spec`) or source doc · target env URL (from profile `environments`, never production, for stimulus IDs) · production read path for observation IDs · roles/accounts needed. Missing → ask before drafting.
 
 ## Header
@@ -43,7 +43,7 @@ status: 🔄
 `| ID | status | note |` pre-filled 🔄 for every ID and smoke.
 
 ## Rare paths
-ID whose path fires only on some inputs (a filter, a fallback, an error branch) → before any live run, one of: an input known to fire it · a sample size from the estimated rate, with its cost, agreed if it costs money · declared not observable live up front, naming the test that covers it (status ⚠️). Never discover after the run that the path did not fire.
+ID whose path fires only on some inputs (a filter, a fallback, an error branch) → before any live run, one of: an input known to fire it · a sample size from the estimated rate, with its cost, agreed if it costs money · none of those → status 🔄 and an escalation before the run (data built in another non-production env, wait for it, or a follow-up ticket); never ⚠️ and never closed on a test alone. Never discover after the run that the path did not fire.
 
 ## Self-check
 every ID has a section and a trigger · every pre-condition checked against the target env before the plan is handed over, not assumed from the spec · cold tester can run each without asking · captures named as hypotheses · conventions not repeated per section · every UI ID has ≥1 UX check · fixtures named + cleanup tag.
