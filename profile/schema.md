@@ -35,7 +35,8 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | repo | `<repo>/.delivery/profile.md`, committed | `environments`, `deploy`, concrete `ci` |
 | repo (local) | `<git common dir>/delivery/profile.md`, never committed, shared by worktrees; after the committed repo level | same, for repos where delivery files must not be versioned (`vcs.repo-profile: local`) |
 
-- repo not under its project's dir → repo profile (committed or local) links it: `## levels` → `- project: <dir>` (absolute or relative to the repo root); merged as project level, before the repo files. Dir without `.delivery/profile.md` → exit 1.
+- level not under its project's dir → that profile links it: `## levels` → `- project: <dir>` (absolute, or relative to the dir owning the level; repo root for the local repo profile). Any level except user can link; the linked profile is merged right before the linking one; one hop. Dir without `.delivery/profile.md` → exit 1.
+- app-specific rules (one app of a project with several) → profile in the app's dir (or its repos), not in the project profile.
 - `~/.delivery/profile.md` = invalid → use user level.
 - above the repo's git toplevel, dirs that are git roots are skipped and listed under `## Skipped`.
 

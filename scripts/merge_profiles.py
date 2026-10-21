@@ -4,7 +4,7 @@ Levels, far to near: L0 the plugin defaults (profile/defaults.md), the user file
 (~/.claude/delivery/profile.md), then every .delivery/profile.md from the
 filesystem root down to the working directory, then the local repo profile
 (<git common dir>/delivery/profile.md: never committed, shared by worktrees).
-A repo profile may link a project level outside its ancestors: `## levels` → `- project: <dir>`.
+Any level may link a project level outside its ancestors (`## levels` → `- project: <dir>`): merged right before it.
 Fields: nearest level wins unless locked with [invariant]. Rules: by id within
 a section; nearest wins unless an invariant with that id exists in any section.
 Grammar: profile/schema.md.
@@ -261,33 +261,33 @@ def discover(cwd: Path, home: Path) -> Discovery:
     if local and local.is_file():
         found.append(local.resolve())
         repo_level = True
-    project = _linked_project(repo_files, toplevel)
-    if project:
-        first_repo = next(i for i, p in enumerate(found) if any(_same(p, f.resolve()) for f in repo_files))
-        found.insert(first_repo, project)
+    user_file = (home / USER_FILE).resolve()
+    for profile in list(found):
+        if _same(profile, user_file):
+            continue
+        base = toplevel if local and _same(profile, local.resolve()) else profile.parent.parent
+        project = _linked_project(profile, base)
+        if project and not any(_same(project, p) for p in found):
+            found.insert(next(i for i, p in enumerate(found) if _same(p, profile)), project)
     return Discovery(dedupe(found), skipped, toplevel, repo_level, [f.resolve() for f in repo_files])
 
 
-def _linked_project(repo_files: list[Path], toplevel: Path | None) -> Path | None:
-    """Project level named by the repo profile (`## levels` → `- project: <dir>`), nearest file wins.
+def _linked_project(profile: Path, base: Path) -> Path | None:
+    """Project level a profile names (`## levels` → `- project: <dir>`); merged right before that profile.
 
-    For repos that do not live under their project's directory. Relative paths resolve from the repo root.
+    For levels that do not live under their project's directory. Relative paths resolve from the dir that
+    owns the level (the repo root for the local repo profile). One hop: a linked profile's own link is ignored.
     """
-    target = None
-    for repo_file in repo_files:
-        value = parse(_read(repo_file), str(repo_file)).get(LEVELS_SECTION, Section()).fields.get("project")
-        if value:
-            target = (repo_file, value)
-    if target is None or toplevel is None:
+    value = parse(_read(profile), str(profile)).get(LEVELS_SECTION, Section()).fields.get("project")
+    if not value:
         return None
-    repo_file, value = target
     directory = Path(value)
     if not directory.is_absolute():
-        directory = toplevel / directory
-    profile = (directory / LEVEL_FILE).resolve()
-    if not profile.is_file():
-        raise ProfileError(f"{repo_file}: levels/project points to {directory}, which has no {LEVEL_FILE.as_posix()}")
-    return profile
+        directory = base / directory
+    linked = (directory / LEVEL_FILE).resolve()
+    if not linked.is_file():
+        raise ProfileError(f"{profile}: levels/project points to {directory}, which has no {LEVEL_FILE.as_posix()}")
+    return linked
 
 
 def collect(cwd: Path, home: Path, defaults: Path = DEFAULTS) -> list[Path]:

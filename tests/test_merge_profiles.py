@@ -272,6 +272,15 @@ class DiscoverTest(unittest.TestCase):
         found = mp.discover(repo, self.root / "nohome")
         self.assertEqual(found.paths, [project.resolve(), committed.resolve()])
 
+    def test_intermediate_level_links_its_project_above_itself(self):
+        project = write(self.root, "clients/acme/.delivery/profile.md", "## environments\n")
+        app = write(self.root, "work/billing/.delivery/profile.md", "## levels\n- project: ../../clients/acme\n")
+        repo = self.root / "work/billing/back"
+        (repo / ".git").mkdir(parents=True)
+        committed = write(repo, ".delivery/profile.md", "## deploy\n")
+        found = mp.discover(repo, self.root / "nohome")
+        self.assertEqual(found.paths, [project.resolve(), app.resolve(), committed.resolve()])
+
     def test_linked_project_without_profile_is_an_error(self):
         repo = self.root / "repo"
         (repo / ".git").mkdir(parents=True)

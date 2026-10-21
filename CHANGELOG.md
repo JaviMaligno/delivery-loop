@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.4.0
-- profiles: a repo profile (committed or local) can link a project level outside its ancestors with `## levels` → `- project: <dir>`; merged as project level before the repo files; a dir without a profile → exit 1. For repos that do not live under their project's directory. census links instead of copying.
+- profiles: any level (repo, local repo or an intermediate dir) can link a project level outside its ancestors with `## levels` → `- project: <dir>`; merged right before the linking profile; one hop; a dir without a profile → exit 1. For repos or apps that do not live under their project's directory. census links instead of copying; app-specific rules go in the app's own level.
 - defaults: transversal rule `source-conflict` — profile vs instructions or memory → newer dated source wins, the stale one is fixed at its source. A live run tested with an account a stale memory still pointed to, against a newer rule.
 - schema: `live-verification.test-identity`; deliver phase 7 acts only as that identity.
 - merge_profiles: the `repo level` line shows the repo files actually used (it showed the committed path when only the local profile existed).
