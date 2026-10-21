@@ -59,7 +59,8 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
     if args.phase in REMERGE_PHASES and not args.owner:
         logged = args.task.read_text(encoding="utf-8") if args.task.is_file() else ""
         merge_file = args.task.parent / f"merge-{args.phase}.md"
-        if f"· phase {args.phase} ·" not in logged and not merge_file.is_file():
+        started = any(line.startswith("- ") and f" · phase {args.phase} · " in line for line in logged.splitlines())
+        if not started and not merge_file.is_file():
             parser.error(f"phase {args.phase} starts with the re-merge: save it first with "
                          f"merge_profiles.py --out {merge_file} (deliver Start 5)")
     when = now()
