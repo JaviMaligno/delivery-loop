@@ -13,7 +13,7 @@ behaviours:
 - regression: neighbour flows sharing code with the change (from the diff: who imports what was touched) smoke-tested live; before/after in the same env when a baseline exists.
 - "read in code" never reported as "measured".
 - test data → prefixed, cleaned at the end (rule `authority/[delete-exceptions]`). Not reversible → record in the ticket what changed and its previous value; that is a valid close.
-- evidence → `live-verification.evidence-dir` (default: task workspace, untracked).
+- evidence → `live-verification.evidence-dir` (default: task workspace, untracked); never a session temp dir, which is deleted with the session.
 - fix loop: a pass finds in-scope defects → finish the pass, then ONE fix branch with all of them → phases 4–6 once → full pass again. Never one cycle per defect. Phase closes only on a clean pass; out-of-scope findings → bugs list.
 - browser driver: confirm viewport non-zero and page visible before trusting clicks.
 
