@@ -245,6 +245,41 @@ class DiscoverTest(unittest.TestCase):
         self.assertEqual(found.paths, [local.resolve()])
         self.assertTrue(found.repo_level)
 
+    def test_repo_profile_links_project_level_outside_its_ancestors(self):
+        project = write(self.root, "clients/acme/.delivery/profile.md", "## environments\n")
+        repo = self.root / "work/repo"
+        (repo / ".git").mkdir(parents=True)
+        org = write(self.root, "work/.delivery/profile.md", "## ci\n")
+        local = write(repo, ".git/delivery/profile.md",
+                      f"## levels\n- project: {(self.root / 'clients/acme').as_posix()}\n")
+        found = mp.discover(repo, self.root / "nohome")
+        self.assertEqual(found.paths, [org.resolve(), project.resolve(), local.resolve()])
+
+    def test_linked_project_path_is_relative_to_repo_root(self):
+        project = write(self.root, "clients/acme/.delivery/profile.md", "## environments\n")
+        repo = self.root / "work/repo"
+        (repo / ".git").mkdir(parents=True)
+        committed = write(repo, ".delivery/profile.md", "## levels\n- project: ../../clients/acme\n")
+        (repo / "src").mkdir()
+        found = mp.discover(repo / "src", self.root / "nohome")
+        self.assertEqual(found.paths, [project.resolve(), committed.resolve()])
+
+    def test_linked_project_already_an_ancestor_is_not_duplicated(self):
+        project = write(self.root, "acme/.delivery/profile.md", "## environments\n")
+        repo = self.root / "acme/repo"
+        (repo / ".git").mkdir(parents=True)
+        committed = write(repo, ".delivery/profile.md", "## levels\n- project: ..\n")
+        found = mp.discover(repo, self.root / "nohome")
+        self.assertEqual(found.paths, [project.resolve(), committed.resolve()])
+
+    def test_linked_project_without_profile_is_an_error(self):
+        repo = self.root / "repo"
+        (repo / ".git").mkdir(parents=True)
+        write(repo, ".delivery/profile.md", "## levels\n- project: ../missing\n")
+        with self.assertRaises(mp.ProfileError) as ctx:
+            mp.discover(repo, self.root / "nohome")
+        self.assertIn("levels/project", str(ctx.exception))
+
     def test_dedupe_uses_case_insensitive_normcase_on_windows(self):
         paths = [Path("C:/Work/Repo/.delivery/profile.md"), Path("c:/work/repo/.delivery/profile.md")]
         self.assertEqual(len(mp.dedupe(paths, ntpath.normcase)), 1)

@@ -95,4 +95,5 @@ Rules:
 - [state-at-source] Work state comes from git, PRs and deploys; a tracker status or a document is a hint, not evidence.
 - [precedence] Source > spec > plan > code.
 - [decision-change] Acting against a recorded decision (D0.x, plan, escalation answer) needs a new decision written first in the task file: what changes, why, and its source (user answer, profile rule, instructions or memory read mid-task). Never override a recorded decision silently.
+- [source-conflict] Profile and other instructions or memory disagree → the newer dated source wins; fix the stale one at its source and log it in the task file. Undated or same date → ask. Never follow the older one silently.
 - [report] Report: decided+why · open with recommendation · assumed · out of scope · where to look.

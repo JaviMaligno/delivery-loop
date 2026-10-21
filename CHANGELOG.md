@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+- profiles: a repo profile (committed or local) can link a project level outside its ancestors with `## levels` → `- project: <dir>`; merged as project level before the repo files; a dir without a profile → exit 1. For repos that do not live under their project's directory. census links instead of copying.
+- defaults: transversal rule `source-conflict` — profile vs instructions or memory → newer dated source wins, the stale one is fixed at its source. A live run tested with an account a stale memory still pointed to, against a newer rule.
+- schema: `live-verification.test-identity`; deliver phase 7 acts only as that identity.
+- evals: `census-real-repo` with a scaffolded repo (local bare remotes; client branches carrying cut merges, README documenting a push git rejects). Run with `--scaffold`. On Windows shell tools are refused (no sandbox backend), so the agent reads `.git` directly: with plugin 2/3, without 0/3. Shell grants work where the sandbox exists.
+
 ## 0.3.0
 Frictions from two live runs (a ticket end to end on a client project, and a release session).
 - deliver: task file `owner` + since; log lines timed with `date -u`, written per step; `phase <n> loaded` line; re-merge on entering phases 6 and 7 (a rule changed mid-task and the run kept the stale one).

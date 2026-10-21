@@ -8,6 +8,7 @@ status: ✅ PASS · ⚠️ PASS + note · ❌ fail · 🔄 not run. ❌/🔄 nev
 
 behaviours:
 - never against `environments.production-env` (invariant).
+- act only as `live-verification.test-identity` when set; another account (found in a doc, memory, credentials file) → rule `transversal/[source-conflict]`, never just use it.
 - visual evidence: captures/recording per ID from the deployed env. No visual surface (API, queue) → real response or query, with date + env.
 - regression: neighbour flows sharing code with the change (from the diff: who imports what was touched) smoke-tested live; before/after in the same env when a baseline exists.
 - "read in code" never reported as "measured".

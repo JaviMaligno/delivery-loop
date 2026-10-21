@@ -9,7 +9,7 @@
     {
       "name": "delivery-loop",
       "description": "Environment-agnostic delivery loop with layered profiles",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "source": "./"
     }
   ]
