@@ -10,7 +10,7 @@ source: <path> · inventory: <link> · gaps: <link> · PR: <link> · date: <date
 ## Compliance
 | ID | description | surface | action | expected | evidence | status |
 |----|-------------|---------|--------|----------|----------|--------|
-| SPEC-1 | ... | UI | ... | ... | [capture](../qa-evidence/<date>/screenshots/spec-1-01-x.png) · `<test name>` | resolved |
+| SPEC-1 | ... | UI | ... | ... | [capture](evidence/screenshots/spec-1-01-x.png) · `<test name>` | resolved |
 | SPEC-3 | ... | backend | ... | ... | pending GAP-2 | gap-blocked |
 
 ## Detail
@@ -29,7 +29,7 @@ CI on <sha>: <link> · neighbour smoke: <flows + result> · baseline compare: <r
 | item | why | where |
 ```
 
-visual index `docs/qa-evidence/<date>/visual-qa.md`:
+visual index `evidence/visual-qa.md`:
 ```markdown
 | capture | proves | environment | note |
 ```

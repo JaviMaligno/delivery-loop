@@ -7,21 +7,21 @@ description: Use when work must comply with a reference someone else wrote — c
 
 contract: the source document. Every plan step, test, commit and verification traces to an ID.
 
-## Outputs (dir: the task's delivery dir when invoked from `deliver`; else `docs/spec-review/`)
+## Outputs (dir: `vcs.delivery-dir`, with or without `deliver`; slug = feature)
 | file | phase | template |
 |---|---|---|
 | `<feature>-inventory.md` | ingest | `references/inventory.md` |
 | `<feature>-gaps.md` | gaps | `references/gaps.md` |
 | `<feature>-deferred.md` | any | `references/scope.md` |
 | `<feature>.md` review doc | close | `references/review.md` |
-evidence: `<evidence dir>/screenshots/<id>-<n>-<desc>.png` + `visual-qa.md` index; evidence dir = `live-verification.evidence-dir` under `deliver`, else `docs/qa-evidence/<YYYY-MM-DD>/`.
+evidence: `<evidence dir>/screenshots/<id>-<n>-<desc>.png` + `visual-qa.md` index; evidence dir = `live-verification.evidence-dir`.
 
 ## Steps
 1. ingest: locate exact source (ambiguous reference → ask for the path; wrong version = rework). Read whole; convert binary docs to text first. One row per atomic requirement.
 2. gaps: ambiguous criteria, missing client data/assets, internal conflicts, undocumented external systems, subjective words without target → gap. Present all in one pass, grouped by ID. Needs external answer → `gap-blocked` + owner + what + date asked. Workable with placeholder → stays `pending` + `assumption:` note.
 3. plan gate: each step cites IDs; `Out of scope` section always present; every non-blocked, in-scope ID has ≥1 step.
 4. implement: test names and commits cite IDs; scope checklist (`references/scope.md`) before any change not traceable to an ID.
-5. verify: re-read the original source (not the inventory). Per ID gather evidence; UI ID → capture from deployed env, mandatory; no evidence → not `resolved`. Headless/no browser → say so in the review doc.
+5. verify: re-read the original source (not the inventory). Per ID gather evidence; UI ID → capture from deployed env, mandatory; no evidence → not `resolved`. No browser → escalate to get one; never `resolved` without the capture.
 6. review doc: summary table + per-ID detail + deferred section.
 
 ## IDs and statuses

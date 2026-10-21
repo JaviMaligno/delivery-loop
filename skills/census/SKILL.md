@@ -11,7 +11,7 @@ where: run inside the task workspace (deliver phase 0 creates it first) → repo
 
 ## Start (always, before detecting or asking)
 - run the merge first; its output is the only source of what is already settled. Every field and rule it shows, at any level, is settled: never ask for it, never re-detect it unless a recheck finds a mismatch.
-- profiles are exactly the files the merge lists; other files nearby (backups, drafts, `*.aside`, examples) are not profiles and are not read as such.
+- profiles are exactly the files the merge lists; other files nearby (backups, drafts, examples) are not profiles and are not read as such.
 - questions and writes cover only what the merge leaves unresolved for the scope below.
 
 ## Scope
@@ -54,6 +54,7 @@ where: run inside the task workspace (deliver phase 0 creates it first) → repo
 - cheap: remote, default branch, protection, deploy config, required checks still match profile; procedure facts the task will use pass their dry-check.
 - mismatch → update that datum at its level; one line to the user.
 - `Source` older than `census.stale-after-days` → re-verify before relying on it.
+- operational facts (branches, deploy path, environments, CI) are per repo: detect them in the repo; when a repo differs from what its project profile says, write that repo's values at repo level instead of inheriting.
 - facts about layout (where a repo lives, `levels` links, paths, which dir groups which repos) → re-verify every time: a move makes them false without changing their date.
 - merge lists `## Missing` → ask for those fields (task-scoped), or write `- kind: none` when the repo has no environments.
 - unverifiable now → keep; escalation in task file if the task depends on it.

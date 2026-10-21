@@ -6,7 +6,6 @@ done-when: every source point has an ID or an exclusion reason.
 
 behaviours:
 - read the source entire; never a summary. Ticket already fixing scope/split → respect it.
-- precedence: source > spec > plan > code.
 
 capabilities: tracker, live-verification (current behaviour, large only).
 absent: tracker none → source is the document or request.

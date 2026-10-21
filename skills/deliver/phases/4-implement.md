@@ -5,7 +5,7 @@ out: commits: failing test → code → passing test; test names and commit mess
 done-when: tests of the touched zone executed and green (output captured).
 
 behaviours:
-- respect `machine` limits (concurrency, local-forbidden); full suites → CI unless profile allows.
+- respect `machine` limits (concurrency, local-forbidden).
 - static checks first when they answer the question (diff, grep, read, single test).
 - before each edit: which ID does this serve? none → deferred list.
 - old test failing because it encodes the defect → amend with reason.

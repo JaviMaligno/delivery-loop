@@ -18,9 +18,8 @@ out: plan doc with statuses + evidence pointers · bug list apart · cleanup con
 - none pinned and several available → pick by the list above; say which.
 
 ## Per ID
-pre-condition (fixture with prefix `QA-<feature>-<ts>-`) → steps → capture at named path → compare → status + one-line note with evidence path.
+pre-condition (fixture prefixed `QA-<feature>-<ts>-`, or marked in another field when the id comes from the data) → steps → capture at named path → compare → status + one-line note with evidence path.
 honesty: can't capture → say so; never ✅ from code reading; capture ≠ expected → not verified, find why.
-browser driver: confirm viewport non-zero and page visible before trusting interactions.
 
 ## Bug hunt (separate output)
 | pattern | looks like |
@@ -31,9 +30,7 @@ browser driver: confirm viewport non-zero and page visible before trusting inter
 | stuck async pipeline | status stuck pending; stale queue messages |
 | opaque indicator | colour/badge/value without explanation |
 | producer/consumer mismatch | app writes to queue A, worker reads B |
-| auto-apply gap | suggestion stored, target field never written |
 | data leak to external party | internal names in outbound content |
-| default tab hides results | default view empty after a fix |
 each bug: where (file/route) · severity (blocks-merge · important · minor) · suggested fix.
 
 ## Regression smoke
