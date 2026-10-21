@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+First feature-size run (a ticket sized feature, end to end to the test env).
+- deliver: phase log has one line per phase of the size path, skipped ones with their reason; phases whose `out` names a plugin skill invoke it. The run logged 0 → 4 with spec, gaps and plan folded into the task file, and never invoked `spec`, `qa-design` or `qa-execution`.
+- qa-design: `trigger` per ID and a Rare paths section. The changed path fires on ~4% of responses; 20 live calls were spent before finding it never fired.
+- deliver phase 7: evidence never in a session temp dir (the run wrote it to the job dir, deleted with the session).
+
 ## 0.3.0
 Frictions from two live runs (a ticket end to end on a client project, and a release session).
 - deliver: task file `owner` + since; log lines timed with `date -u`, written per step; `phase <n> loaded` line; re-merge on entering phases 6 and 7 (a rule changed mid-task and the run kept the stale one).

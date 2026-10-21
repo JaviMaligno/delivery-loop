@@ -24,6 +24,7 @@ Examples: no clipped/overlapping labels · language consistent per locale · loa
 verbatim: > <source quote, original language>
 delivered: <PR / commit / flag>
 pre-conditions: <specific data shape; role; fixture prefix + cleanup tag if created>
+trigger: <input known to exercise this ID | estimated rate in real traffic>
 steps:
 1. <action> → <observable consequence>
 2. [capture 1] <what is in frame, why>
@@ -40,7 +41,10 @@ status: 🔄
 ## Coverage table (end)
 `| ID | status | note |` pre-filled 🔄 for every ID and smoke.
 
+## Rare paths
+ID whose path fires only on some inputs (a filter, a fallback, an error branch) → before any live run, one of: an input known to fire it · a sample size from the estimated rate, with its cost, agreed if it costs money · declared not observable live up front, naming the test that covers it (status ⚠️). Never discover after the run that the path did not fire.
+
 ## Self-check
-every ID has a section · cold tester can run each without asking · captures named as hypotheses · conventions not repeated per section · every UI ID has ≥1 UX check · fixtures named + cleanup tag.
+every ID has a section and a trigger · cold tester can run each without asking · captures named as hypotheses · conventions not repeated per section · every UI ID has ≥1 UX check · fixtures named + cleanup tag.
 
 UX heuristics: new colour indicator → explanation check · new action → disabled-state reason · auto-applied value → visible + overridable · new column → readable at smallest viewport, aligned by type · new error → user words.
