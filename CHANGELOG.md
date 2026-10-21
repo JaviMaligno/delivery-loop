@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.1
+- deliver phase 7, qa-execution: the visual check is mandatory, the tool is not. No browser tool in the profile → any one the session has; none → escalate to get one connected; IDs with something to see never close on HTTP/data checks alone. `live-verification.ui` is a personal choice (user level) and may list fallbacks; `test-identity` says how it logs in.
+
 ## 0.4.0
 - profiles: any level (repo, local repo or an intermediate dir) can link a project level outside its ancestors with `## levels` → `- project: <dir>`; merged right before the linking profile; one hop; a dir without a profile → exit 1. For repos or apps that do not live under their project's directory. census links instead of copying; app-specific rules go in the app's own level.
 - defaults: transversal rule `source-conflict` — profile vs instructions or memory → newer dated source wins, the stale one is fixed at its source. A live run tested with an account a stale memory still pointed to, against a newer rule.

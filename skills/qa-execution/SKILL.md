@@ -12,7 +12,7 @@ out: plan doc with statuses + evidence pointers · bug list apart · cleanup con
 1. async side effect (job ran, row created, status flipped) → data query on test env.
 2. pipeline / queue / schedule timing or failure → logs of the closest surface.
 3. hover, focus, tooltip text, animation, awkward multi-step flow → interactive browser driver.
-4. visual/layout/text on reachable page → profile's `live-verification.ui` tool.
+4. visual/layout/text on reachable page → profile's `live-verification.ui` tool (usually user level: a personal choice), else any browser automation in the session; none → escalate to get one, never skip the visual check.
 5. UI claim backed by data → both.
 - profile or project skill pins a tool → use it; no ad-hoc wrapper scripts around it.
 - none pinned and several available → pick by the list above; say which.
