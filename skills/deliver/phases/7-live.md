@@ -2,7 +2,7 @@
 
 in: inventory (or mini-inventory) + test env serving the SHA; observation IDs: production serving it.
 out: QA plan (skill `qa-design`) executed (skill `qa-execution`): status + evidence per ID · bugs outside spec apart · regression smoke result.
-done-when: every ID ✅ or ⚠️ with evidence, or ❌/🔄 explicitly escalated · visual evidence for every ID with something to see · smoke done.
+done-when: every ID ✅ or ⚠️ with evidence, ❌ escalated, or 🔄 with its cause and a dated wait · visual evidence for every ID with something to see · smoke done.
 
 status: ✅ PASS · ⚠️ PASS + note · ❌ fail · 🔄 not measured yet. ❌/🔄 never close silently. 🔄 always carries its cause and a dated wait (rule `authority/[waits]`) or an escalation; ⚠️ is never used for something not measured.
 
