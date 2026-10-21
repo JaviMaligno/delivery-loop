@@ -10,10 +10,10 @@ description: Use when a task must be delivered end to end — from a ticket, a c
    - exit 1 → fix the named `file:line`. exit 3/4 → census after the workspace exists (phase 0).
    - `## Missing` → task-scoped census for those fields in phase 0; never reach phase 6 or 7 with them unset.
 2. merged profile = authority for this task; each item tagged `← Ln`.
-3. phase 0 creates the workspace → re-merge with `--cwd <workspace>`; that merge is the one that rules.
+3. phase 0 creates the workspace → re-merge with `--cwd <workspace> --out <delivery-dir>/merge-0.md`; that saved merge is the one that rules.
    - resume: phase 0 finds the entry phase from evidence (branches, PRs, deploys), not from the tracker state; work can start at any phase.
 4. load `phases/<n>-*.md` when entering phase n; never all at once; log `phase <n> loaded` in the task file.
-5. re-merge on entering phases 6 and 7, as the first step of each, logged: rules can change mid-task. Diff against the ruling merge → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
+5. re-merge on entering phases 6 and 7, as the first step of each, logged: rules can change mid-task. `--out <delivery-dir>/merge-<n>.md`, then `git diff --no-index` against the ruling merge file → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
 
 ## Phases
 | # | phase | done-when (summary) |
@@ -38,13 +38,13 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 
 ## Delivery dir
 `vcs.delivery-dir` (default `<git common dir>/delivery/tasks/<slug>/`, rule `vcs/[delivery-dir]`): created in phase 0, before any workspace; holds everything the task writes that is not the change itself:
-- `task.md` (task file) · spec, gaps, deferred and review docs (skill `spec`) · plan · QA plan (skill `qa-design`) · `evidence/`.
+- `task.md` (task file) · `merge-<n>.md` (saved merges) · spec, gaps, deferred and review docs (skill `spec`) · plan · QA plan (skill `qa-design`) · `evidence/`.
 - git common dir = the repo the ticket belongs to; that repo is not checked out or not ours → the repo the session runs in.
 - delivery skills invoked from `deliver` write here, never in `docs/` or the worktree; legacy location (`.delivery/tasks/<slug>.md` in a checkout) → read it on resume, move it here.
 
 ## Task file
 `<delivery-dir>/task.md`: `owner: <session name> · since <UTC>` · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · pending cleanup · phase log.
-- log line: `<UTC from date -u> · phase <n> · <what> · <evidence pointer>`; never a time from memory.
+- log line: written only by `python "<this skill dir>/../../scripts/task_log.py" <task.md> <n> "<what>" [<evidence pointer>]`, which takes the time from the clock; never typed by hand.
 - written as each step closes, not at phase end: a session can die mid-phase.
 - one line per phase of the size path, skipped ones included with their reason; a feature log with no line for 1–3 means they did not run.
 

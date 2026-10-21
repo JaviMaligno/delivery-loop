@@ -360,6 +360,21 @@ class MainTest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertIn("- via: git-integration ← L2", out)
 
+    def test_cli_out_saves_merge_with_time_and_level_hashes(self):
+        write(self.root, "org/.delivery/profile.md", ORG)
+        repo = write(self.root, "org/repo/.delivery/profile.md", REPO)
+        target = self.root / "task" / "merge-0.md"
+        out: list[str] = []
+        code = mp.main(["--cwd", str(self.root / "org/repo"), "--home", str(self.root / "nohome"),
+                        "--defaults", str(self.defaults), "--out", str(target)],
+                       out.append, lambda _: None, now=lambda: "2026-10-21T13:09:00Z")
+        self.assertEqual(code, 0)
+        saved = target.read_text(encoding="utf-8")
+        self.assertTrue(saved.startswith("merged-at: 2026-10-21T13:09:00Z\n"))
+        self.assertIn(f"- L2 sha256 {mp.file_hash(repo)}", saved)
+        self.assertIn("- via: git-integration ← L2", saved)
+        self.assertIn("- via: git-integration ← L2", "\n".join(out))
+
     def test_cli_exits_1_on_malformed_profile_to_stderr(self):
         write(self.root, "repo/.delivery/profile.md", "## deploy\nRules:\n- no id here\n")
         code, out, err = self.run_main(self.root / "repo")

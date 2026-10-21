@@ -5,7 +5,7 @@ description: Use to execute a QA plan against a deployed non-production environm
 
 # QA execution
 
-in: QA plan (else run `qa-design`) · env URL from profile (never production — invariant) · auth method · cleanup owner = you.
+in: QA plan (else run `qa-design`) · env URL from profile (never production — invariant; observation IDs only read production, no stimulus, no write) · auth method · cleanup owner = you.
 out: plan doc with statuses + evidence pointers · bug list apart · cleanup confirmed.
 
 ## Capture tool per ID (first match)
@@ -43,4 +43,4 @@ run the plan's smoke sections; before/after compare in same env when baseline ex
 delete every prefixed fixture, upload, draft; verify zero remain; reset toggles. Keep only what the user asked to keep.
 
 ## Report
-coverage table first (`| ID | status | note |`), then bugs, then smoke. ✅ = PASS · ⚠️ = PASS + note · ❌/🔄 → escalate, never close silently.
+coverage table first (`| ID | status | note |`), then bugs, then smoke. ✅ = PASS · ⚠️ = PASS + note · ❌ → escalate · 🔄 = not measured yet: cause + dated wait, or escalate; never ⚠️ for something not measured; never close silently.

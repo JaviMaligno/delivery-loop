@@ -1,7 +1,7 @@
 # Profile schema
 
 file: `.delivery/profile.md` per level; user level `~/.claude/delivery/profile.md`; L0 = plugin `profile/defaults.md`.
-merge: `python "<plugin root>/scripts/merge_profiles.py" --cwd <workspace>` → merged profile, each item tagged `← Ln`. Never merge by hand.
+merge: `python "<plugin root>/scripts/merge_profiles.py" --cwd <workspace>` → merged profile, each item tagged `← Ln`; `--out <file>` also saves it with its UTC time and a hash per level. Never merge by hand.
 exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0 · 4 git repo without repo-level profile → 3/4 run `census`.
 required: `environments.production-env`, `environments.test-env` (or `- kind: none` in `environments`); unset → listed under `## Missing` in the output, exit unchanged.
 
