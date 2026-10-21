@@ -5,7 +5,7 @@ description: Use to turn a spec inventory or reference document (client feedback
 
 # QA design
 
-out: `docs/qa-evidence/<YYYY-MM-DD>/<feature>-qa-plan.md`. Plans only; captures nothing; does not pick capture tools.
+out: `<feature>-qa-plan.md` in the task's delivery dir when invoked from `deliver`; else `docs/qa-evidence/<YYYY-MM-DD>/`. Plans only; captures nothing; does not pick capture tools.
 in: inventory (skill `spec`) or source doc · target env URL (from profile `environments`, never production) · roles/accounts needed. Missing → ask before drafting.
 
 ## Header
@@ -23,7 +23,7 @@ Examples: no clipped/overlapping labels · language consistent per locale · loa
 ## <ID> — <title>
 verbatim: > <source quote, original language>
 delivered: <PR / commit / flag>
-pre-conditions: <specific data shape; role; fixture prefix + cleanup tag if created>
+pre-conditions: <specific data shape; role> · data in target env: exists (record id + how checked) | fixture to create (name, prefix or marker, how to delete) | ⚠️ not reachable (why)
 trigger: <input known to exercise this ID | estimated rate in real traffic>
 steps:
 1. <action> → <observable consequence>
@@ -45,6 +45,6 @@ status: 🔄
 ID whose path fires only on some inputs (a filter, a fallback, an error branch) → before any live run, one of: an input known to fire it · a sample size from the estimated rate, with its cost, agreed if it costs money · declared not observable live up front, naming the test that covers it (status ⚠️). Never discover after the run that the path did not fire.
 
 ## Self-check
-every ID has a section and a trigger · cold tester can run each without asking · captures named as hypotheses · conventions not repeated per section · every UI ID has ≥1 UX check · fixtures named + cleanup tag.
+every ID has a section and a trigger · every pre-condition checked against the target env before the plan is handed over, not assumed from the spec · cold tester can run each without asking · captures named as hypotheses · conventions not repeated per section · every UI ID has ≥1 UX check · fixtures named + cleanup tag.
 
 UX heuristics: new colour indicator → explanation check · new action → disabled-state reason · auto-applied value → visible + overridable · new column → readable at smallest viewport, aligned by type · new error → user words.

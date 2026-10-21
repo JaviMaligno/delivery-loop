@@ -46,7 +46,7 @@ where: run inside the task workspace (deliver phase 0 creates it first) → repo
    - org/project dir unclear → ask once; recommended = nearest common parent of those repos.
    - repo not under its project's dir (project profile exists elsewhere) → link it from the repo profile: `## levels` → `- project: <dir>`; never copy the project profile into the repo.
 5. show new/changed lines per file → write → merge → exit 0, `## Conflicts` and `## Skipped` reviewed. Rule form is exact: `- [id] text` or `- [invariant id] text` (one bracket, space-separated).
-6. task files: `.delivery/tasks/` excluded via `<git common dir>/info/exclude` unless `vcs.commit-task-file: yes`. `repo-profile: committed` → commit the repo profile on the task branch (explicit path); `local` → nothing to commit.
+6. task files live in `vcs.delivery-dir` (default outside every tree: nothing to exclude). `repo-profile: committed` → commit the repo profile on the task branch (explicit path); `local` → nothing to commit.
 7. (full scope only) permissions: propose a harness allowlist with detected commands of classes `local`/`own`/`test-env` (git, tests, tracker CLI, read-only platform status). Show it; merge by hand into existing settings; never overwrite.
 8. (full scope only, optional) invariants expressible as a command pattern (CLI deploy, push to production branch) → propose a pre-tool hook that blocks them. Describe; write only if accepted.
 
@@ -54,6 +54,8 @@ where: run inside the task workspace (deliver phase 0 creates it first) → repo
 - cheap: remote, default branch, protection, deploy config, required checks still match profile; procedure facts the task will use pass their dry-check.
 - mismatch → update that datum at its level; one line to the user.
 - `Source` older than `census.stale-after-days` → re-verify before relying on it.
+- facts about layout (where a repo lives, `levels` links, paths, which dir groups which repos) → re-verify every time: a move makes them false without changing their date.
+- merge lists `## Missing` → ask for those fields (task-scoped), or write `- kind: none` when the repo has no environments.
 - unverifiable now → keep; escalation in task file if the task depends on it.
 
 ## Rules

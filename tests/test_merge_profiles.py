@@ -116,6 +116,24 @@ class ParseTest(unittest.TestCase):
         with self.assertRaises(mp.ProfileError):
             mp.parse("## Conflicts\n- a: b\n", "p.md")
 
+    def test_line_continuing_a_bullet_is_an_error_with_location(self):
+        with self.assertRaises(mp.ProfileError) as ctx:
+            mp.parse("## vcs\nRules:\n- [x] Link <wt>\nnode_modules to the main one.\n", "org.md")
+        self.assertIn("org.md:4", str(ctx.exception))
+
+    def test_indented_continuation_of_a_field_is_an_error(self):
+        with self.assertRaises(mp.ProfileError) as ctx:
+            mp.parse("## ci\n- provider: x\n  and more\n", "p.md")
+        self.assertIn("p.md:3", str(ctx.exception))
+
+    def test_prose_after_a_blank_line_is_still_ignored(self):
+        profile = mp.parse("## ci\n- provider: x\n\nA note.\n", "p.md")
+        self.assertEqual(profile["ci"].fields, {"provider": "x"})
+
+    def test_missing_is_a_reserved_section(self):
+        with self.assertRaises(mp.ProfileError):
+            mp.parse("## Missing\n- a: b\n", "p.md")
+
     def test_prose_outside_bullets_is_ignored(self):
         profile = mp.parse("# Title\nSome intro.\n\n## ci\nFree note.\n- provider: x\n", "p.md")
         self.assertEqual(profile["ci"].fields, {"provider": "x"})
@@ -380,6 +398,19 @@ class MainTest(unittest.TestCase):
         self.assertEqual(code, 0, out + err)
         self.assertNotIn("## Conflicts", out)
         self.assertIn("- L4:", out)
+
+    def test_cli_lists_missing_required_fields(self):
+        write(self.root, "repo/.delivery/profile.md", "## environments\n- production-env: prod [invariant]\n")
+        code, out, _ = self.run_main(self.root / "repo")
+        self.assertEqual(code, 0)
+        self.assertIn("## Missing", out)
+        self.assertIn("- environments/test-env", out)
+        self.assertNotIn("- environments/production-env", out)
+
+    def test_environments_kind_none_satisfies_required_fields(self):
+        write(self.root, "repo/.delivery/profile.md", "## environments\n- kind: none\n")
+        _, out, _ = self.run_main(self.root / "repo")
+        self.assertNotIn("## Missing", out)
 
     def test_plugin_defaults_parse(self):
         mp.parse((ROOT / "profile" / "defaults.md").read_text(encoding="utf-8"), "defaults.md")

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0
+Frictions from three live runs on two projects (a ticket already delivered months before, a monitor ticket on a repo owned by another team, a feature end to end with code).
+- delivery dir: `vcs.delivery-dir`, default `<git common dir>/delivery/tasks/<slug>/`, holds task file (`task.md`), spec docs, plan, QA plan and evidence. Outside every working tree: nothing to exclude, never pushed, survives workspace removal, exists for tasks with no workspace. Replaces the 0.4.2 location (read on resume, moved). `vcs.commit-task-file` removed. Runs wrote spec and plan in a versioned `docs/` of a repo pushed to a client, kept evidence inside a worktree, and had no place for the task file when there was no code to change.
+- deliver phase 0: checks the reported behaviour in the current code (or reproduces it), not only the ticket id; "already resolved by another change" is an entry (phase 7). A run sized a feature already fixed by a PR that never cited the ticket.
+- deliver phase 0: tracker state follows the entry phase (≤ 5 start, 6–7 review, ≥ 8 untouched); never moves back. A run moved a ticket in production since months to "in progress".
+- deliver phase 0: no workspace and no branch when no code will change (verification on merged work, or a repo that is not ours).
+- merge: required fields `environments.production-env` and `environments.test-env` (or `- kind: none`) → `## Missing` in the output; phase 0 runs census for them. A run reached live verification with no test env in the profile and exit 0.
+- merge: a line continuing a bullet → exit 1 with `file:line`. A rule wrapped by an editor was cut silently.
+- deliver phases 6 and 7: re-merge is the first step, logged (a run skipped it).
+- deliver phase 7: each fixture gets a `pending cleanup` line in the task file when created; leaving with pending lines → written in the ticket first. Marker in another field when the id comes from the data.
+- qa-design: each pre-condition says whether the data exists in the target env (record + how checked), which fixture creates it, or ⚠️ unreachable — checked before the run.
+- defaults: authority rule `release-owner` — production promotion owned by someone else (release process, client) → a hand-off stated as a fact, no question or recommendation about the release; report section "handed off".
+- census: recheck re-verifies layout facts (repo location, `levels` links, paths) every time; a moved repo kept a dated link that was already false.
+
 ## 0.4.2
 - deliver: task file and evidence live in the main checkout (`.delivery/tasks/<slug>[/]`), never inside the task worktree; phase 9 moves them out before removing a workspace. The feature run kept its evidence inside the worktree and then skipped the cleanup to avoid deleting it.
 

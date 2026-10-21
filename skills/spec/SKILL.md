@@ -7,14 +7,14 @@ description: Use when work must comply with a reference someone else wrote — c
 
 contract: the source document. Every plan step, test, commit and verification traces to an ID.
 
-## Outputs (dir `docs/spec-review/`)
+## Outputs (dir: the task's delivery dir when invoked from `deliver`; else `docs/spec-review/`)
 | file | phase | template |
 |---|---|---|
 | `<feature>-inventory.md` | ingest | `references/inventory.md` |
 | `<feature>-gaps.md` | gaps | `references/gaps.md` |
 | `<feature>-deferred.md` | any | `references/scope.md` |
 | `<feature>.md` review doc | close | `references/review.md` |
-evidence: `docs/qa-evidence/<YYYY-MM-DD>/screenshots/<id>-<n>-<desc>.png` + `visual-qa.md` index.
+evidence: `<evidence dir>/screenshots/<id>-<n>-<desc>.png` + `visual-qa.md` index; evidence dir = `live-verification.evidence-dir` under `deliver`, else `docs/qa-evidence/<YYYY-MM-DD>/`.
 
 ## Steps
 1. ingest: locate exact source (ambiguous reference → ask for the path; wrong version = rework). Read whole; convert binary docs to text first. One row per atomic requirement.

@@ -5,6 +5,7 @@ out: PR (draft if `ci.on-draft` is light) · tracker → `state-review` · merge
 done-when: test env serves the exact merged SHA (checked, not inferred).
 
 behaviours:
+- first: re-merge + diff against the ruling merge (deliver Start 5), logged.
 - capture run/deploy id or SHA before waiting; wait for that one.
 - deploy only through `deploy.via`; never out-of-band.
 - CI red → confirm the run is for the last pushed commit before diagnosing.

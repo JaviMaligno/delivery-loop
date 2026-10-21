@@ -8,6 +8,7 @@ behaviours:
 - before merge: all checks success on head SHA, mergeable, correct base, head = local HEAD.
 - promotion between long-lived branches keeps shared history (merge commit, no squash) unless profile says otherwise.
 - never relax protection to get through.
+- `merge-production` owned by someone else → rule `authority/[release-owner]`: hand-off stated as a fact, no question, no recommendation about the release.
 - promotion not done in this task (authority says it is not ours, batched release, out of agreed scope) → phase still closes: task file + report state why, what is pending, who owns it and what was prepared for them (branch/PR, SHA, evidence).
 - hand-off and phase 9: `tracker.done-on-handoff: yes` → close to `state-done` with the hand-off recorded; `no` (default) → stay at `state-review` until promotion is verified.
 - integration branch = production branch (or none) → phase 6 only deployed a preview; this phase does the merge, after phase 7.

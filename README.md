@@ -30,7 +30,7 @@ A real run on a small API-contract ticket, started with only the ticket id:
 4. **Live** — confirmed the test environment serves the exact commit, then exercised the real endpoint and compared its output with the contract.
 5. **Promote / close** — promotion to the next environments belongs to another team there, so the loop prepared the hand-off; it opened one follow-up ticket for the out-of-scope findings, commented the evidence on the ticket and closed it.
 
-Everything it decided and why lives in a task file (`.delivery/tasks/<slug>.md`, not committed).
+Everything it decided and why lives in a task file (`<git common dir>/delivery/tasks/<slug>/task.md`), next to its spec, plan and evidence: outside the working tree, never committed, kept after the worktree is removed.
 
 ## Install
 
