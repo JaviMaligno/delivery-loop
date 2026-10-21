@@ -4,6 +4,7 @@ Levels, far to near: L0 the plugin defaults (profile/defaults.md), the user file
 (~/.claude/delivery/profile.md), then every .delivery/profile.md from the
 filesystem root down to the working directory, then the local repo profile
 (<git common dir>/delivery/profile.md: never committed, shared by worktrees).
+Any level may link a project level outside its ancestors (`## levels` → `- project: <dir>`): merged right before it.
 Fields: nearest level wins unless locked with [invariant]. Rules: by id within
 a section; nearest wins unless an invariant with that id exists in any section.
 Grammar: profile/schema.md.
@@ -33,6 +34,7 @@ DEFAULTS = Path(__file__).resolve().parent.parent / "profile" / "defaults.md"
 USER_FILE = Path(".claude") / "delivery" / "profile.md"
 LEVEL_FILE = Path(".delivery") / "profile.md"
 LOCAL_REPO_FILE = Path("delivery") / "profile.md"
+LEVELS_SECTION = "levels"
 
 
 class ProfileError(Exception):
@@ -74,6 +76,7 @@ class Discovery:
     skipped: list[Path]
     repo_root: Path | None
     repo_level: bool
+    repo_files: list[Path] = field(default_factory=list)
 
 
 def parse(text: str, path: str) -> dict[str, Section]:
@@ -250,13 +253,41 @@ def discover(cwd: Path, home: Path) -> Discovery:
             skipped.append(candidate)
             continue
         found.append(candidate)
-    repo_level = bool(toplevel) and (toplevel / LEVEL_FILE).is_file()
+    committed = toplevel / LEVEL_FILE if toplevel else None
+    repo_level = bool(committed) and committed.is_file()
     common = _git_common_dir(toplevel) if toplevel else None
     local = common / LOCAL_REPO_FILE if common else None
+    repo_files = [f for f in (committed, local) if f and f.is_file()]
     if local and local.is_file():
         found.append(local.resolve())
         repo_level = True
-    return Discovery(dedupe(found), skipped, toplevel, repo_level)
+    user_file = (home / USER_FILE).resolve()
+    for profile in list(found):
+        if _same(profile, user_file):
+            continue
+        base = toplevel if local and _same(profile, local.resolve()) else profile.parent.parent
+        project = _linked_project(profile, base)
+        if project and not any(_same(project, p) for p in found):
+            found.insert(next(i for i, p in enumerate(found) if _same(p, profile)), project)
+    return Discovery(dedupe(found), skipped, toplevel, repo_level, [f.resolve() for f in repo_files])
+
+
+def _linked_project(profile: Path, base: Path) -> Path | None:
+    """Project level a profile names (`## levels` → `- project: <dir>`); merged right before that profile.
+
+    For levels that do not live under their project's directory. Relative paths resolve from the dir that
+    owns the level (the repo root for the local repo profile). One hop: a linked profile's own link is ignored.
+    """
+    value = parse(_read(profile), str(profile)).get(LEVELS_SECTION, Section()).fields.get("project")
+    if not value:
+        return None
+    directory = Path(value)
+    if not directory.is_absolute():
+        directory = base / directory
+    linked = (directory / LEVEL_FILE).resolve()
+    if not linked.is_file():
+        raise ProfileError(f"{profile}: levels/project points to {directory}, which has no {LEVEL_FILE.as_posix()}")
+    return linked
 
 
 def collect(cwd: Path, home: Path, defaults: Path = DEFAULTS) -> list[Path]:
@@ -318,7 +349,7 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
         return 1
     repo_state = None
     if found.repo_root is not None:
-        repo_state = str(found.repo_root / LEVEL_FILE) if found.repo_level else "none"
+        repo_state = " + ".join(str(f) for f in found.repo_files) if found.repo_level else "none"
     emit(render(merge(levels), [(label, str(p)) for (label, _), p in zip(levels, paths)],
                 [str(s) for s in found.skipped], repo_state))
     if len(paths) == 1:

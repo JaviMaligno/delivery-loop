@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+- profiles: any level (repo, local repo or an intermediate dir) can link a project level outside its ancestors with `## levels` → `- project: <dir>`; merged right before the linking profile; one hop; a dir without a profile → exit 1. For repos or apps that do not live under their project's directory. census links instead of copying; app-specific rules go in the app's own level.
+- defaults: transversal rule `source-conflict` — profile vs instructions or memory → newer dated source wins, the stale one is fixed at its source. A live run tested with an account a stale memory still pointed to, against a newer rule.
+- schema: `live-verification.test-identity`; deliver phase 7 acts only as that identity.
+- merge_profiles: the `repo level` line shows the repo files actually used (it showed the committed path when only the local profile existed).
+- evals: `census-real-repo` with a scaffolded repo (local bare remotes; client branches carrying cut merges, README documenting a push git rejects). Run with `--scaffold`. On Windows shell tools are refused (no sandbox backend), so the agent reads `.git` directly: with plugin 2/3, without 0/3. Shell grants work where the sandbox exists.
+
 ## 0.3.1
 First feature-size run (a ticket sized feature, end to end to the test env).
 - deliver: phase log has one line per phase of the size path, skipped ones with their reason; phases whose `out` names a plugin skill invoke it. The run logged 0 → 4 with spec, gaps and plan folded into the task file, and never invoked `spec`, `qa-design` or `qa-execution`.

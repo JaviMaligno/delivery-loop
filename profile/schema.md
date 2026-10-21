@@ -35,6 +35,8 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | repo | `<repo>/.delivery/profile.md`, committed | `environments`, `deploy`, concrete `ci` |
 | repo (local) | `<git common dir>/delivery/profile.md`, never committed, shared by worktrees; after the committed repo level | same, for repos where delivery files must not be versioned (`vcs.repo-profile: local`) |
 
+- level not under its project's dir → that profile links it: `## levels` → `- project: <dir>` (absolute, or relative to the dir owning the level; repo root for the local repo profile). Any level except user can link; the linked profile is merged right before the linking one; one hop. Dir without `.delivery/profile.md` → exit 1.
+- app-specific rules (one app of a project with several) → profile in the app's dir (or its repos), not in the project profile.
 - `~/.delivery/profile.md` = invalid → use user level.
 - above the repo's git toplevel, dirs that are git roots are skipped and listed under `## Skipped`.
 
@@ -47,11 +49,12 @@ exit: 0 ok · 1 malformed/unreadable (stderr `file:line`) · 3 nothing beyond L0
 | environments | `<name>: <url> · branch <b>` per env; `test-env: <name>`; `fallback-test-env: <name>`; `production-env: <name> [invariant]` | dev, staging, prod |
 | deploy | kind, via (git-integration\|pipeline\|manual), served-sha-check (primary; fallback when it needs missing access) | platform git integration, pipeline |
 | reviewers | `<n>-<name>: <what> · weight approves\|blocking\|advisory`, ordered by n | human, approving bot, adversarial reviewer on another model, subagent |
-| live-verification | kind, ui, api, data, evidence-dir | browser automation, HTTP client, test-DB queries |
+| live-verification | kind, ui, api, data, evidence-dir, test-identity (account(s) tests act as) | browser automation, HTTP client, test-DB queries |
 | channels | kind, approvals, notices | team chat, email, none |
 | machine | test-concurrency, local-forbidden, os | `2`, `builds, servers, containers` |
 | authority | `class-<class>: <policy>`; `<action>: <class>`; `<action>: <class> · owner <who>` | `merge-production: test-env`, `deploy-test-env: test-env · owner release session` |
 | census | stale-after-days | `30` |
+| levels | project | `../../clients/acme` |
 
 ## Authority
 - classes: `local` · `own` · `test-env` · `production` · `third-party` · `irreversible`.
