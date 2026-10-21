@@ -280,6 +280,17 @@ class DiscoverTest(unittest.TestCase):
             mp.discover(repo, self.root / "nohome")
         self.assertIn("levels/project", str(ctx.exception))
 
+    def test_cli_reports_the_local_repo_profile_as_repo_level(self):
+        repo = self.root / "repo"
+        (repo / ".git").mkdir(parents=True)
+        local = write(repo, ".git/delivery/profile.md", "## deploy\n")
+        defaults = write(self.root, "defaults.md", EMPTY_DEFAULTS)
+        out: list[str] = []
+        code = mp.main(["--cwd", str(repo), "--home", str(self.root / "nohome"), "--defaults", str(defaults)],
+                       emit=out.append)
+        self.assertEqual(code, 0)
+        self.assertIn(f"repo level: {local.resolve()}", out[0])
+
     def test_dedupe_uses_case_insensitive_normcase_on_windows(self):
         paths = [Path("C:/Work/Repo/.delivery/profile.md"), Path("c:/work/repo/.delivery/profile.md")]
         self.assertEqual(len(mp.dedupe(paths, ntpath.normcase)), 1)

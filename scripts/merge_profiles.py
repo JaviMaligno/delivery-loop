@@ -76,6 +76,7 @@ class Discovery:
     skipped: list[Path]
     repo_root: Path | None
     repo_level: bool
+    repo_files: list[Path] = field(default_factory=list)
 
 
 def parse(text: str, path: str) -> dict[str, Section]:
@@ -264,7 +265,7 @@ def discover(cwd: Path, home: Path) -> Discovery:
     if project:
         first_repo = next(i for i, p in enumerate(found) if any(_same(p, f.resolve()) for f in repo_files))
         found.insert(first_repo, project)
-    return Discovery(dedupe(found), skipped, toplevel, repo_level)
+    return Discovery(dedupe(found), skipped, toplevel, repo_level, [f.resolve() for f in repo_files])
 
 
 def _linked_project(repo_files: list[Path], toplevel: Path | None) -> Path | None:
@@ -348,7 +349,7 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
         return 1
     repo_state = None
     if found.repo_root is not None:
-        repo_state = str(found.repo_root / LEVEL_FILE) if found.repo_level else "none"
+        repo_state = " + ".join(str(f) for f in found.repo_files) if found.repo_level else "none"
     emit(render(merge(levels), [(label, str(p)) for (label, _), p in zip(levels, paths)],
                 [str(s) for s in found.skipped], repo_state))
     if len(paths) == 1:
