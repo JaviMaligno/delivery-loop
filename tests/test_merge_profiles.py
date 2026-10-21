@@ -373,7 +373,10 @@ class MainTest(unittest.TestCase):
         self.assertTrue(saved.startswith("merged-at: 2026-10-21T13:09:00Z\n"))
         self.assertIn(f"- L2 sha256 {mp.file_hash(repo)}", saved)
         self.assertIn("- via: git-integration ← L2", saved)
-        self.assertIn("- via: git-integration ← L2", "\n".join(out))
+        printed = "\n".join(out)
+        self.assertIn(f"saved: {target}", printed)
+        self.assertIn("- L2:", printed)
+        self.assertNotIn("- via: git-integration", printed)
 
     def test_cli_exits_1_on_malformed_profile_to_stderr(self):
         write(self.root, "repo/.delivery/profile.md", "## deploy\nRules:\n- no id here\n")

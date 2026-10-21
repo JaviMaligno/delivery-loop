@@ -6,7 +6,7 @@ description: Use to create or refresh delivery profiles — first use of deliver
 # Census
 
 out: `.delivery/profile.md` at the right levels (grammar `<plugin root>/profile/schema.md`) + merge exit 0.
-merge: `python "<this skill dir>/../../scripts/merge_profiles.py" --cwd <workspace>`; interpreter `python` → `py -3` → `python3`.
+merge: `python "<dir of this SKILL.md>/../../scripts/merge_profiles.py" --cwd <workspace>`; interpreter `python` → `py -3` → `python3`.
 where: run inside the task workspace (deliver phase 0 creates it first) → repo profile is written and committed on the task branch.
 
 ## Start (always, before detecting or asking)

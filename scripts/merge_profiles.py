@@ -8,7 +8,8 @@ Any level may link a project level outside its ancestors (`## levels` → `- pro
 Fields: nearest level wins unless locked with [invariant]. Rules: by id within
 a section; nearest wins unless an invariant with that id exists in any section.
 Grammar: profile/schema.md.
---out <file> also saves the merge with its UTC time and a hash per level (the ruling merge a task diffs later).
+--out <file> saves the merge with its UTC time and a hash per level (the ruling merge a task diffs later) and prints
+only the levels and the sections that need action.
 Exit: 0 merged · 1 malformed or unreadable · 3 nothing beyond L0 · 4 inside a git
 repo without a repo-level profile.
 """
@@ -361,6 +362,17 @@ def _read(path: Path) -> str:
         raise ProfileError(f"{path}: cannot read ({error})") from error
 
 
+def summary(rendered: str, out: Path) -> str:
+    """With --out the full merge goes to the file; stdout keeps levels and the sections that need action."""
+    keep, kept = [], True
+    for line in rendered.splitlines():
+        if line.startswith("## "):
+            kept = line[3:].strip().lower() in RESERVED_SECTIONS
+        if kept:
+            keep.append(line)
+    return "\n".join(keep + ["", f"saved: {out}"]) + "\n"
+
+
 def file_hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
 
@@ -390,7 +402,7 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
         repo_state = " + ".join(str(f) for f in found.repo_files) if found.repo_level else "none"
     rendered = render(merge(levels), [(label, str(p)) for (label, _), p in zip(levels, paths)],
                       [str(s) for s in found.skipped], repo_state)
-    emit(rendered)
+    emit(summary(rendered, args.out) if args.out else rendered)
     if args.out:
         header = [f"merged-at: {now()}"]
         header += [f"- {label} sha256 {file_hash(p)}" for (label, _), p in zip(levels, paths)]

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1
+- Codex: `.codex-plugin/plugin.json` + `.agents/plugins/marketplace.json` over the same `skills/`; `$deliver <ticket>` invokes it. A test keeps names and versions of both harnesses' manifests in sync. Skills name script paths relative to "the dir of this SKILL.md" instead of a harness placeholder. <!-- agnostic-ok -->
+- `task_log.py --owner <session>` creates the task file skeleton with its time from the clock, or takes it over (rewrites `owner`, logs the change). A run wrote the header's time by hand because the script only appended log lines.
+- `merge_profiles.py --out` prints only levels, `## Conflicts`, `## Missing`, `## Skipped` and the saved path; the full merge is in the file. Each re-merge printed ~400 lines into the session.
+
 ## 0.6.0
 From a live run that closed on production behaviour (a fix already deployed; the ticket's closing criterion was days of real traffic without the error).
 - verification modes: each QA ID is `stimulus` (exercised in the test env, as before) or `observation` (only real traffic shows it: metric · read-only source in production · window). Default rule `environments/[observe-not-test]`: reading production's own observability from inside it is observation, not testing; never a stimulus, never a write. Phase 7 only knew the test env; the run had to invent the distinction.
