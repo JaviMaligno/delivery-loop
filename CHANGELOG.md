@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.1
+- deliver phase 0: when the session was launched from a checkout on a branch other than the integration or production branch, the agent instruction files it loaded can be stale; phase 0 reads them from the workspace (fresh base) and follows those. Found on a real ticket: the launch checkout sat on a month-old branch, the repo's current instructions require a human attestation before merge, and one run merged without it while another read the current rules in its worktree and stopped.
+
 ## 0.7.0
 From a run in a second harness, a client feature run, and an audit of every clause against the runs that motivated it.
 - deliver phase 0: preflight (rule `authority/[preflight]`). Every capability the task will use is probed with a real call (configured ≠ authenticated ≠ exposed ≠ working), local check tools at the version the repo or CI pins; failures go in one round, offering the substitute already accepted (`<capability>.fallback`) or alternatives found first, and the answer is saved so the next run does not ask. Setup problems stop being frictions found one by one mid-task (fifteen in one run).

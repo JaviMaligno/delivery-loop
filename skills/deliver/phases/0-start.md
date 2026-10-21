@@ -15,6 +15,7 @@ behaviours:
 - no code change expected (entry phase ≥ 7 on merged work, or a repo that is not ours) → no workspace and no branch; verify against the deployed SHA; delivery dir holds task file and evidence.
 - workspace per `vcs.isolation` from fresh base; branch name per `tracker.branch-naming` when a ticket exists; reuse an existing workspace/branch for this task.
 - workspace ready to run: untracked env files copied, dependencies installed or linked per profile rules; nothing of the delivery dir inside it.
+- repo instructions: launch checkout on a branch other than `vcs.integration-branch` / `vcs.production-branch` → the agent instruction files loaded at session start may be stale → read them (and what they import) from the workspace and follow those; log file + branch in the task file. Launch checkout on the integration or production branch → the loaded ones stand.
 - semantic contradictions between rules with different ids → nearer level wins unless it weakens an invariant → note in task file + report.
 - size: trivial (one surface, no design choice, ≤ 3 files) · feature · large (multi-PR, redesign, > 10 source points) → write reason. Size measures the work left from the entry phase, not the work already done.
 - trivial → mini-inventory in task file: IDs from the request, one line each.
