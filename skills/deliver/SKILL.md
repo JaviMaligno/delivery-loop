@@ -39,6 +39,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 `.delivery/tasks/<slug>.md`: `owner: <session name> · since <UTC>` · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · phase log.
 - log line: `<UTC from date -u> · phase <n> · <what> · <evidence pointer>`; never a time from memory.
 - written as each step closes, not at phase end: a session can die mid-phase.
+- one line per phase of the size path, skipped ones included with their reason; a feature log with no line for 1–3 means they did not run.
 
 ## Authority
 - action → class → policy: merged `## authority` (`<action>: <class>`, `class-<class>: <policy>`).
@@ -52,6 +53,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 merged `## transversal` rules apply in every phase.
 
 ## Delegation
+phase whose `out` names a plugin skill (`spec`, `qa-design`, `qa-execution`) → invoke that skill; an inline equivalent is not the phase.
 session has a skill for a phase's discipline (brainstorming, TDD, debugging, plan writing, code review, verification) → may run inside the phase; phase contract decides done.
 
 ## Report (end, and on any stop)
