@@ -53,8 +53,8 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
     parser.add_argument("evidence", nargs="?")
     parser.add_argument("--owner")
     args = parser.parse_args(argv)
-    if not args.owner and not (args.phase and args.what):
-        parser.error("give --owner <session>, or <phase> <what> [<evidence>]")
+    if bool(args.owner) == bool(args.phase or args.what or args.evidence) or (not args.owner and not args.what):
+        parser.error("give either --owner <session>, or <phase> <what> [<evidence>]; not both")
     when = now()
     try:
         args.task.parent.mkdir(parents=True, exist_ok=True)

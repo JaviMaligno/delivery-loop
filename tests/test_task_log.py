@@ -65,6 +65,11 @@ class TaskLogTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.run_log("7")
 
+    def test_owner_with_a_log_line_is_rejected_not_half_written(self):
+        with self.assertRaises(SystemExit):
+            self.run_log("7", "C1 measured", "--owner", "new")
+        self.assertFalse(self.task.exists())
+
     def test_default_clock_is_utc_iso(self):
         self.assertRegex(tl.utc_now(), r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
