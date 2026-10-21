@@ -78,7 +78,7 @@ Rules:
 - done-on-handoff: no
 
 ## live-verification
-- evidence-dir: task workspace, untracked
+- evidence-dir: `.delivery/tasks/<slug>/` in the main checkout, untracked
 
 ## census
 - stale-after-days: 30
