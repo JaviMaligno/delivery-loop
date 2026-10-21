@@ -36,7 +36,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 | large | 0–9; phase 1 baseline inventory + parallel readers + completeness critic; phase 3 one plan per PR, human checkpoint between PRs |
 
 ## Task file
-`.delivery/tasks/<slug>.md`: `owner: <session name> · since <UTC>` · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · phase log.
+`.delivery/tasks/<slug>.md` in the main checkout, never inside the task worktree (removed at close): `owner: <session name> · since <UTC>` · size+reason · mini-inventory (trivial) · D0.x · escalations + answers · waits · phase log.
 - log line: `<UTC from date -u> · phase <n> · <what> · <evidence pointer>`; never a time from memory.
 - written as each step closes, not at phase end: a session can die mid-phase.
 - one line per phase of the size path, skipped ones included with their reason; a feature log with no line for 1–3 means they did not run.

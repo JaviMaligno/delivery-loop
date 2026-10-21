@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2
+- deliver: task file and evidence live in the main checkout (`.delivery/tasks/<slug>[/]`), never inside the task worktree; phase 9 moves them out before removing a workspace. The feature run kept its evidence inside the worktree and then skipped the cleanup to avoid deleting it.
+
 ## 0.4.1
 - deliver phase 7, qa-execution: the visual check is mandatory, the tool is not. No browser tool in the profile → any one the session has; none → escalate to get one connected; IDs with something to see never close on HTTP/data checks alone. `live-verification.ui` is a personal choice (user level) and may list fallbacks; `test-identity` says how it logs in.
 
