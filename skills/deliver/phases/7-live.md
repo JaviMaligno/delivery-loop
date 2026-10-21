@@ -17,7 +17,7 @@ behaviours:
 - test data → prefixed (or marked in another field when the id comes from the data), cleaned at the end (rule `authority/[delete-exceptions]`). Not reversible → record in the ticket what changed and its previous value; that is a valid close.
 - each fixture, the moment it is created → a `pending cleanup` line in the task file (id, env, how to delete it); struck when cleaned. Leaving with lines still pending (env down, session ending) → write them in the ticket first.
 - evidence → `live-verification.evidence-dir` (default `<delivery-dir>/evidence/`); never a session temp dir or a workspace, both deleted before the task's record is.
-- fix loop: a pass finds in-scope defects → finish the pass, then ONE fix branch with all of them → phases 4–6 once → full pass again. Never one cycle per defect. Phase closes only on a clean pass; out-of-scope findings → bugs list.
+- fix loop: a pass finds in-scope defects → finish the pass, then ONE fix branch with all of them → phases 4–6 once → full pass again. Never one cycle per defect. Phase closes only on a clean pass; out-of-scope findings → rule `transversal/[side-findings]`.
 
 capabilities: live-verification, environments.
 absent: no browser tool in the profile → any browser automation the session has; none → escalate once to get one connected (the tool is personal, the visual check is not); IDs with something to see never close on HTTP/data checks alone · no visual surface at all (API, queue) → HTTP/data checks, say so.

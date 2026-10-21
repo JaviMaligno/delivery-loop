@@ -1,6 +1,6 @@
 {
   "name": "delivery-loop",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Environment-agnostic delivery loop: from a ticket, document or request to a change verified live, promoted and closed. Layered profiles adapt it to each org, project and repo.",
   "author": {
     "name": "Javier Aguilar",

@@ -13,7 +13,7 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 3. phase 0 creates the workspace → re-merge with `--cwd <workspace> --out <delivery-dir>/merge-0.md`; that saved merge is the one that rules.
    - resume: phase 0 finds the entry phase from evidence (branches, PRs, deploys), not from the tracker state; work can start at any phase.
 4. load `phases/<n>-*.md` when entering phase n; never all at once; log `phase <n> loaded` in the task file.
-5. re-merge on entering phases 6 and 7, as the first step of each, logged: rules can change mid-task. `--out <delivery-dir>/merge-<n>.md`, then `git diff --no-index` against the ruling merge file → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
+5. re-merge on entering phases 6 and 7, as the first step of each, logged (`task_log.py` refuses the phase's first line until `merge-<n>.md` exists): rules can change mid-task. `--out <delivery-dir>/merge-<n>.md`, then `git diff --no-index` against the ruling merge file → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
 
 ## Phases
 | # | phase | done-when (summary) |
@@ -64,4 +64,4 @@ phase whose `out` names a plugin skill (`spec`, `qa-design`, `qa-execution`) →
 session has a skill for a phase's discipline (brainstorming, TDD, debugging, plan writing, code review, verification) → may run inside the phase; phase contract decides done.
 
 ## Report (end, and on any stop)
-decided+why · open (options + recommendation) · handed off (owner, what, from which SHA; no recommendation) · assumed · out of scope · where to look (PR, task file, evidence) · "requested works" vs "rest still works".
+decided+why · open (options + recommendation) · handed off (owner, what, from which SHA; no recommendation) · derived tasks (id, state) · assumed · out of scope · where to look (PR, task file, evidence) · "requested works" vs "rest still works".

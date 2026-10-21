@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2
+- `task_log.py` refuses the first log line of phase 6 or 7 until that phase's saved re-merge (`merge-<n>.md`) exists. Two runs skipped the re-merge the instruction asks for.
+- defaults: rule `transversal/[side-findings]` — defects outside the scope follow the profile's convention (fix or only report, and where); without one, a linked tracker ticket and no fix inside the task. A ticket born that way is its own task, listed in the parent's report as derived (id, state).
+
 ## 0.7.1
 - deliver phase 0: when the session was launched from a checkout on a branch other than the integration or production branch, the agent instruction files it loaded can be stale; phase 0 reads them from the workspace (fresh base) and follows those. Found on a real ticket: the launch checkout sat on a month-old branch, the repo's current instructions require a human attestation before merge, and one run merged without it while another read the current rules in its worktree and stopped.
 

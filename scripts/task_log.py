@@ -18,6 +18,7 @@ from typing import Callable
 
 SECTIONS = ["## Decisions", "## Escalations", "## Waits", "## Pending cleanup", "## Log"]
 OWNER_PREFIX = "owner: "
+REMERGE_PHASES = {"6", "7"}  # their first log line needs the saved re-merge (runs skipped it twice)
 
 
 def utc_now() -> str:
@@ -55,6 +56,13 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
     args = parser.parse_args(argv)
     if bool(args.owner) == bool(args.phase or args.what or args.evidence) or (not args.owner and not args.what):
         parser.error("give either --owner <session>, or <phase> <what> [<evidence>]; not both")
+    if args.phase in REMERGE_PHASES and not args.owner:
+        logged = args.task.read_text(encoding="utf-8") if args.task.is_file() else ""
+        merge_file = args.task.parent / f"merge-{args.phase}.md"
+        started = any(line.startswith("- ") and f" · phase {args.phase} · " in line for line in logged.splitlines())
+        if not started and not merge_file.is_file():
+            parser.error(f"phase {args.phase} starts with the re-merge: save it first with "
+                         f"merge_profiles.py --out {merge_file} (deliver Start 5)")
     when = now()
     try:
         args.task.parent.mkdir(parents=True, exist_ok=True)

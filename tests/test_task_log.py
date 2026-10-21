@@ -27,9 +27,9 @@ class TaskLogTest(unittest.TestCase):
     def test_appends_line_with_clock_time(self):
         self.task.parent.mkdir(parents=True)
         self.task.write_text("owner: s\n", encoding="utf-8")
-        code, out = self.run_log("7", "C1 measured", "evidence/c1.json")
+        code, out = self.run_log("4", "step 1 committed", "evidence/c1.json")
         self.assertEqual(code, 0)
-        line = f"- {NOW} · phase 7 · C1 measured · evidence/c1.json"
+        line = f"- {NOW} · phase 4 · step 1 committed · evidence/c1.json"
         self.assertEqual(self.task.read_text(encoding="utf-8"), f"owner: s\n{line}\n")
         self.assertEqual(out, [line])
 
@@ -69,6 +69,21 @@ class TaskLogTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.run_log("7", "C1 measured", "--owner", "new")
         self.assertFalse(self.task.exists())
+
+    def test_first_line_of_phase_6_or_7_needs_its_saved_merge(self):
+        self.run_log("--owner", "s")
+        with self.assertRaises(SystemExit):
+            self.run_log("6", "phase 6 loaded")
+        self.assertNotIn("phase 6 ·", self.task.read_text(encoding="utf-8"))
+        (self.task.parent / "merge-6.md").write_text("merged-at: x\n", encoding="utf-8")
+        code, _ = self.run_log("6", "phase 6 loaded")
+        self.assertEqual(code, 0)
+        code, _ = self.run_log("6", "PR opened")
+        self.assertEqual(code, 0)
+
+    def test_other_phases_need_no_saved_merge(self):
+        code, _ = self.run_log("4", "step 1 committed")
+        self.assertEqual(code, 0)
 
     def test_default_clock_is_utc_iso(self):
         self.assertRegex(tl.utc_now(), r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
