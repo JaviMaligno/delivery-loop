@@ -1,0 +1,22 @@
+{
+  "name": "delivery-loop",
+  "version": "0.6.1",
+  "description": "Environment-agnostic delivery loop: from a ticket, document or request to a change verified live, promoted and closed. Layered profiles adapt it to each org, project and repo.",
+  "author": {
+    "name": "Javier Aguilar",
+    "url": "https://github.com/JaviMaligno"
+  },
+  "homepage": "https://github.com/JaviMaligno/delivery-loop",
+  "repository": "https://github.com/JaviMaligno/delivery-loop",
+  "license": "MIT",
+  "keywords": ["workflow", "spec-driven", "qa", "delivery", "profiles", "tdd"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Delivery Loop",
+    "shortDescription": "From a ticket to a change verified live, with layered profiles",
+    "developerName": "Javier Aguilar",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": ["Use $deliver to take this ticket end to end"]
+  }
+}

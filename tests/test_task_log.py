@@ -44,6 +44,32 @@ class TaskLogTest(unittest.TestCase):
         self.run_log("0", "start")
         self.assertTrue(self.task.is_file())
 
+    def test_owner_creates_skeleton_with_clock_time(self):
+        code, _ = self.run_log("--owner", "deliver-abc-1")
+        self.assertEqual(code, 0)
+        text = self.task.read_text(encoding="utf-8")
+        self.assertTrue(text.startswith(f"owner: deliver-abc-1 · since {NOW}\n"))
+        for heading in ("## Decisions", "## Escalations", "## Waits", "## Pending cleanup", "## Log"):
+            self.assertIn(heading, text)
+        self.assertTrue(text.endswith(f"- {NOW} · phase 0 · task file created by deliver-abc-1\n"))
+
+    def test_owner_on_existing_file_is_a_takeover(self):
+        self.task.parent.mkdir(parents=True)
+        self.task.write_text("owner: old · since 2026-10-20T10:00:00Z\nsize: trivial\n", encoding="utf-8")
+        self.run_log("--owner", "new")
+        text = self.task.read_text(encoding="utf-8")
+        self.assertTrue(text.startswith(f"owner: new · since {NOW}\nsize: trivial\n"))
+        self.assertTrue(text.endswith(f"- {NOW} · phase - · owner old → new\n"))
+
+    def test_log_line_needs_phase_and_what(self):
+        with self.assertRaises(SystemExit):
+            self.run_log("7")
+
+    def test_owner_with_a_log_line_is_rejected_not_half_written(self):
+        with self.assertRaises(SystemExit):
+            self.run_log("7", "C1 measured", "--owner", "new")
+        self.assertFalse(self.task.exists())
+
     def test_default_clock_is_utc_iso(self):
         self.assertRegex(tl.utc_now(), r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 

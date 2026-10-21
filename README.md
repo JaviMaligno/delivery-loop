@@ -1,6 +1,6 @@
 # delivery-loop
 
-A Claude Code plugin that takes a task from its source (a ticket, a requirements document or a plain request) all the way to a change that is **merged, deployed to a test environment, verified live, handed over for promotion and closed** — with evidence at every step.
+A plugin for Claude Code and Codex that takes a task from its source (a ticket, a requirements document or a plain request) all the way to a change that is **merged, deployed to a test environment, verified live, handed over for promotion and closed** — with evidence at every step. <!-- agnostic-ok -->
 
 You ask the way you always do:
 
@@ -39,7 +39,18 @@ claude plugin marketplace add JaviMaligno/delivery-loop
 claude plugin install delivery-loop@delivery-loop
 ```
 
-Restart Claude Code. The first time you run it in a repo, the `census` skill detects your setup and asks one short round of questions; answers are saved in the profile at the right level.
+Restart Claude Code.
+
+Codex: <!-- agnostic-ok -->
+
+```
+codex plugin marketplace add JaviMaligno/delivery-loop  # agnostic-ok
+codex plugin add delivery-loop@delivery-loop  # agnostic-ok
+```
+
+In Codex there are no plugin slash commands: the skills trigger from their description, or explicitly with `$deliver <ticket>`. <!-- agnostic-ok -->
+
+The first time you run it in a repo, the `census` skill detects your setup and asks one short round of questions; answers are saved in the profile at the right level.
 
 If your organisation already keeps a shared org profile, copy it to the directory that holds your repos (`<repos dir>/.delivery/profile.md`) before the first run, and census will only ask what it leaves open.
 
