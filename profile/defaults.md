@@ -99,4 +99,5 @@ Rules:
 - [precedence] Source > spec > plan > code.
 - [decision-change] Acting against a recorded decision (D0.x, plan, escalation answer) needs a new decision written first in the task file: what changes, why, and its source (user answer, profile rule, instructions or memory read mid-task). Never override a recorded decision silently.
 - [source-conflict] Profile and other instructions or memory disagree → the newer dated source wins; fix the stale one at its source and log it in the task file. Undated or same date → ask. Never follow the older one silently.
+- [side-findings] Defects found outside the agreed scope are reported with their evidence following the profile's convention (when to fix, when only to report, where); with none, a tracker ticket linked to the task, nothing fixed inside this task. A ticket born this way that gets worked is its own task (own delivery dir, size, phases); the parent's report lists it as derived (id, state) and does not wait for it unless it is a loose end of the parent's own ticket.
 - [report] Report: decided+why · open with recommendation · assumed · out of scope · where to look.
