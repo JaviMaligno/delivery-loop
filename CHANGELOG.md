@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+From a live run that closed on production behaviour (a fix already deployed; the ticket's closing criterion was days of real traffic without the error).
+- verification modes: each QA ID is `stimulus` (exercised in the test env, as before) or `observation` (only real traffic shows it: metric · read-only source in production · window). Default rule `environments/[observe-not-test]`: reading production's own observability from inside it is observation, not testing; never a stimulus, never a write. Phase 7 only knew the test env; the run had to invent the distinction.
+- 🔄 means "not measured yet" and always carries its cause and a dated wait (or an escalation); ⚠️ is never used for something not measured; an open 🔄 blocks phase 9 (ticket stays in review) and the resume re-enters phase 7 for those IDs only. A criterion left unmeasured by a platform outage was marked ⚠️ and read as a pass.
+- what instructions did not achieve is now mechanical: `merge_profiles.py --out` saves the ruling merge (UTC time + hash per level) in the delivery dir, and phases 6/7 diff their re-merge against that file; `scripts/task_log.py` writes every log line with the time from the clock. Runs typed log times from memory despite the `date -u` instruction (second occurrence) and had no saved merge to diff.
+
 ## 0.5.0
 Frictions from three live runs on two projects (a ticket already delivered months before, a monitor ticket on a repo owned by another team, a feature end to end with code).
 - delivery dir: `vcs.delivery-dir`, default `<git common dir>/delivery/tasks/<slug>/`, holds task file (`task.md`), spec docs, plan, QA plan and evidence. Outside every working tree: nothing to exclude, never pushed, survives workspace removal, exists for tasks with no workspace. Replaces the 0.4.2 location (read on resume, moved). `vcs.commit-task-file` removed. Runs wrote spec and plan in a versioned `docs/` of a repo pushed to a client, kept evidence inside a worktree, and had no place for the task file when there was no code to change.

@@ -2,9 +2,10 @@
 
 in: verified merge, or hand-off from phase 8 per `tracker.done-on-handoff`.
 out: tracker → `state-done` with evidence links · evidence linked in PR + ticket · merged branches deleted (remote+local) · workspaces removed · test data cleaned · report.
-done-when: tracker state + git state match the report; no ID without evidence; test data cleaned or recorded as not reversible.
+done-when: tracker state + git state match the report; no ID without evidence; no 🔄 open; test data cleaned or recorded as not reversible.
 
 behaviours:
+- an ID still 🔄 → no close: tracker stays at `state-review`, the ticket gets what is pending and its wait; resuming at the wait's deadline re-enters phase 7 for those IDs only.
 - evidence (visual where possible) + regression proof are part of the close, not optional.
 - report separates "requested works" (per ID, evidence) from "rest still works" (CI on last commit, neighbour smoke, baseline compare).
 - delete a squash-merged branch: local git cannot see it as merged → confirm the PR state is merged at the host, then force-delete local; never force-delete on git's word alone.

@@ -6,13 +6,13 @@ description: Use to turn a spec inventory or reference document (client feedback
 # QA design
 
 out: `<feature>-qa-plan.md` in the task's delivery dir when invoked from `deliver`; else `docs/qa-evidence/<YYYY-MM-DD>/`. Plans only; captures nothing; does not pick capture tools.
-in: inventory (skill `spec`) or source doc · target env URL (from profile `environments`, never production) · roles/accounts needed. Missing → ask before drafting.
+in: inventory (skill `spec`) or source doc · target env URL (from profile `environments`, never production, for stimulus IDs) · production read path for observation IDs · roles/accounts needed. Missing → ask before drafting.
 
 ## Header
 ```markdown
 # QA plan — <feature>
 date · source · target env · accounts (role + login method) · captures dir
-notation: ✅ pass · ⚠️ pass + UX note · ❌ fail · 🔄 not run
+notation: ✅ pass · ⚠️ pass + UX note · ❌ fail · 🔄 not measured yet (cause + dated wait)
 ```
 
 ## Cross-cutting conventions (once, top)
@@ -24,6 +24,7 @@ Examples: no clipped/overlapping labels · language consistent per locale · loa
 verbatim: > <source quote, original language>
 delivered: <PR / commit / flag>
 pre-conditions: <specific data shape; role> · data in target env: exists (record id + how checked) | fixture to create (name, prefix or marker, how to delete) | ⚠️ not reachable (why)
+mode: stimulus (test env) | observation (only real traffic shows it: metric · read-only source in production · window)
 trigger: <input known to exercise this ID | estimated rate in real traffic>
 steps:
 1. <action> → <observable consequence>

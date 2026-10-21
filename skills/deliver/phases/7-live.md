@@ -1,14 +1,15 @@
 # Phase 7 — live verification
 
-in: inventory (or mini-inventory) + test env serving the SHA.
+in: inventory (or mini-inventory) + test env serving the SHA; observation IDs: production serving it.
 out: QA plan (skill `qa-design`) executed (skill `qa-execution`): status + evidence per ID · bugs outside spec apart · regression smoke result.
 done-when: every ID ✅ or ⚠️ with evidence, or ❌/🔄 explicitly escalated · visual evidence for every ID with something to see · smoke done.
 
-status: ✅ PASS · ⚠️ PASS + note · ❌ fail · 🔄 not run. ❌/🔄 never close silently.
+status: ✅ PASS · ⚠️ PASS + note · ❌ fail · 🔄 not measured yet. ❌/🔄 never close silently. 🔄 always carries its cause and a dated wait (rule `authority/[waits]`) or an escalation; ⚠️ is never used for something not measured.
 
 behaviours:
 - first: re-merge + diff against the ruling merge (deliver Start 5), logged.
-- never against `environments.production-env` (invariant).
+- each ID has a mode (from `qa-design`): stimulus → exercised in the test env; observation → only real traffic shows it (rate, latency, an error that stopped) → production read only, per rule `environments/[observe-not-test]`: metric · source · window. Window not over, or source unreachable → 🔄 with a wait until it can be read; independent IDs go on.
+- never a stimulus or a write against `environments.production-env` (invariant).
 - act only as `live-verification.test-identity` when set; another account (found in a doc, memory, credentials file) → rule `transversal/[source-conflict]`, never just use it.
 - visual evidence: captures/recording per ID from the deployed env. No visual surface (API, queue) → real response or query, with date + env.
 - regression: neighbour flows sharing code with the change (from the diff: who imports what was touched) smoke-tested live; before/after in the same env when a baseline exists.

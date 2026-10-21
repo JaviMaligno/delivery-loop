@@ -8,6 +8,7 @@ Any level may link a project level outside its ancestors (`## levels` → `- pro
 Fields: nearest level wins unless locked with [invariant]. Rules: by id within
 a section; nearest wins unless an invariant with that id exists in any section.
 Grammar: profile/schema.md.
+--out <file> also saves the merge with its UTC time and a hash per level (the ruling merge a task diffs later).
 Exit: 0 merged · 1 malformed or unreadable · 3 nothing beyond L0 · 4 inside a git
 repo without a repo-level profile.
 """
@@ -15,10 +16,12 @@ repo without a repo-level profile.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -358,13 +361,22 @@ def _read(path: Path) -> str:
         raise ProfileError(f"{path}: cannot read ({error})") from error
 
 
+def file_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
-         emit_err: Callable[[str], None] | None = None) -> int:
+         emit_err: Callable[[str], None] | None = None, now: Callable[[], str] = utc_now) -> int:
     emit_err = emit_err or (lambda msg: print(msg, file=sys.stderr))
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--cwd", type=Path, default=Path.cwd())
     parser.add_argument("--home", type=Path, default=Path.home())
     parser.add_argument("--defaults", type=Path, default=DEFAULTS)
+    parser.add_argument("--out", type=Path, help="also save the merge, with its UTC time and a hash per level")
     args = parser.parse_args(argv)
     try:
         found = discover(args.cwd, args.home)
@@ -376,8 +388,18 @@ def main(argv: list[str] | None = None, emit: Callable[[str], None] = print,
     repo_state = None
     if found.repo_root is not None:
         repo_state = " + ".join(str(f) for f in found.repo_files) if found.repo_level else "none"
-    emit(render(merge(levels), [(label, str(p)) for (label, _), p in zip(levels, paths)],
-                [str(s) for s in found.skipped], repo_state))
+    rendered = render(merge(levels), [(label, str(p)) for (label, _), p in zip(levels, paths)],
+                      [str(s) for s in found.skipped], repo_state)
+    emit(rendered)
+    if args.out:
+        header = [f"merged-at: {now()}"]
+        header += [f"- {label} sha256 {file_hash(p)}" for (label, _), p in zip(levels, paths)]
+        try:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_bytes(("\n".join(header) + "\n\n" + rendered).encode("utf-8"))
+        except OSError as error:
+            emit_err(f"error: {args.out}: {error}")
+            return 1
     if len(paths) == 1:
         return 3
     if found.repo_root is not None and not found.repo_level:

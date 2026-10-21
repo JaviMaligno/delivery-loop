@@ -43,6 +43,7 @@ Rules:
 ## environments
 Rules:
 - [invariant no-prod-testing] Never test or write against production. Production data is read only from inside its environment.
+- [observe-not-test] Reading production's own observability (logs, metrics, health counters, its monitor's output) from inside it is observation, not testing: allowed for criteria only real traffic can show. Never a stimulus, never a write.
 - [production-env-required] `production-env` must name the production environment (census asks); locked with [invariant] where it is set.
 
 ## deploy
