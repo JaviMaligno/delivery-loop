@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.3
+From two resumed runs (one picking up a task another harness left, one resuming at a dated wait).
+- `task_log.py`: after an owner change, phases 6 and 7 need a re-merge saved after that change (a resumed run passed the check with the previous session's merge); `--owner` takes an addressable session name, not a description (a run wrote one, so "is the owner alive" could not be checked); `--note <section> <text>` writes timed lines outside the log (runs closed waits and escalations with hand-typed times).
+- deliver: resuming at a dated wait is in Start (re-enter the phase that set it, for its IDs only); it was only in phase 9. Merge diffs ignore the `merged-at` line.
+
 ## 0.7.2
 - `task_log.py` refuses the first log line of phase 6 or 7 until that phase's saved re-merge (`merge-<n>.md`) exists. Two runs skipped the re-merge the instruction asks for.
 - defaults: rule `transversal/[side-findings]` — defects outside the scope follow the profile's convention (fix or only report, and where); without one, a linked tracker ticket and no fix inside the task. A ticket born that way is its own task, listed in the parent's report as derived (id, state).

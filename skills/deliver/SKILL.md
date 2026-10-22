@@ -12,8 +12,9 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 2. merged profile = authority for this task; each item tagged `← Ln`.
 3. phase 0 creates the workspace → re-merge with `--cwd <workspace> --out <delivery-dir>/merge-0.md`; that saved merge is the one that rules.
    - resume: phase 0 finds the entry phase from evidence (branches, PRs, deploys), not from the tracker state; work can start at any phase.
+   - resume at a dated wait (task file `## Waits`, IDs in 🔄): take over the task file, then re-enter the phase that set the wait for those IDs only; the rest of the task is not redone.
 4. load `phases/<n>-*.md` when entering phase n; never all at once; log `phase <n> loaded` in the task file.
-5. re-merge on entering phases 6 and 7, as the first step of each, logged (`task_log.py` refuses the phase's first line until `merge-<n>.md` exists): rules can change mid-task. `--out <delivery-dir>/merge-<n>.md`, then `git diff --no-index` against the ruling merge file → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
+5. re-merge on entering phases 6 and 7, as the first step of each, logged (`task_log.py` refuses the phase's first line until `merge-<n>.md` exists, saved after the last owner change): rules can change mid-task. `--out <delivery-dir>/merge-<n>.md`, then `git diff --no-index -I '^merged-at:'` against the ruling merge file → changed items in the task file; a changed item that affects a recorded decision → rule `transversal/[decision-change]`.
 
 ## Phases
 | # | phase | done-when (summary) |
@@ -43,8 +44,8 @@ description: Use when a task must be delivered end to end — from a ticket, a c
 - delivery skills (`spec`, `qa-design`, `qa-execution`) write here, never in `docs/` or the worktree.
 
 ## Task file
-`<delivery-dir>/task.md`, created by `python "<dir of this SKILL.md>/../../scripts/task_log.py" <task.md> --owner <session name>` (skeleton + `owner: … · since <UTC>`): size+reason · preflight · mini-inventory (trivial) · D0.x · escalations + answers · waits · pending cleanup · phase log.
-- every time in it comes from the script (creation, owner change, log line `task_log.py <task.md> <n> "<what>" [<evidence pointer>]`), never typed by hand.
+`<delivery-dir>/task.md`, created by `python "<dir of this SKILL.md>/../../scripts/task_log.py" <task.md> --owner <session name>` (the name other sessions message; skeleton + `owner: … · since <UTC>`): size+reason · preflight · mini-inventory (trivial) · D0.x · escalations + answers · waits · pending cleanup · phase log.
+- every time in it comes from the script, never typed by hand: creation and owner change (`--owner`), log lines (`task_log.py <task.md> <n> "<what>" [<evidence pointer>]`), and timed lines in other sections such as closing a wait, an escalation answer or a cleanup done (`--note <section> "<text>"`).
 - written as each step closes, not at phase end: a session can die mid-phase.
 - one line per phase of the size path, skipped ones included with their reason; a feature log with no line for 1–3 means they did not run.
 

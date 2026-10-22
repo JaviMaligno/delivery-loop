@@ -1,6 +1,8 @@
+import os
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -80,6 +82,44 @@ class TaskLogTest(unittest.TestCase):
         self.assertEqual(code, 0)
         code, _ = self.run_log("6", "PR opened")
         self.assertEqual(code, 0)
+
+    def test_after_a_takeover_the_phase_needs_a_merge_saved_after_it(self):
+        self.task.parent.mkdir(parents=True)
+        self.task.write_text("owner: old · since 2026-10-20T10:00:00Z\n\n## Log\n"
+                             "- 2026-10-20T10:05:00Z · phase 7 · phase 7 loaded\n", encoding="utf-8")
+        stale = self.task.parent / "merge-7.md"
+        stale.write_text("merged-at: old\n", encoding="utf-8")
+        old = datetime(2026, 10, 20, 10, 4, tzinfo=timezone.utc).timestamp()
+        os.utime(stale, (old, old))
+        self.run_log("--owner", "new")
+        with self.assertRaises(SystemExit):
+            self.run_log("7", "C2 measured")
+        stale.write_text("merged-at: new\n", encoding="utf-8")
+        code, _ = self.run_log("7", "C2 measured")
+        self.assertEqual(code, 0)
+
+    def test_owner_must_be_an_addressable_session_name(self):
+        with self.assertRaises(SystemExit):
+            self.run_log("--owner", "session deliver SAI-1 (trial)")
+        code, _ = self.run_log("--owner", "deliver-sai-1")
+        self.assertEqual(code, 0)
+
+    def test_note_appends_a_timed_line_to_its_section(self):
+        self.run_log("--owner", "s")
+        code, out = self.run_log("--note", "Waits", "W1 closed: C2 measured")
+        self.assertEqual(code, 0)
+        text = self.task.read_text(encoding="utf-8")
+        waits = text.index("## Waits")
+        line = f"- {NOW} · W1 closed: C2 measured"
+        self.assertTrue(waits < text.index(line) < text.index("## Pending cleanup"))
+        self.assertEqual(out, [line])
+
+    def test_note_to_a_missing_section_creates_it_before_the_log(self):
+        self.task.parent.mkdir(parents=True)
+        self.task.write_text("owner: s · since x\n\n## Log\n", encoding="utf-8")
+        self.run_log("--note", "Waits", "W1 open")
+        text = self.task.read_text(encoding="utf-8")
+        self.assertTrue(text.index("## Waits") < text.index(f"- {NOW} · W1 open") < text.index("## Log"))
 
     def test_other_phases_need_no_saved_merge(self):
         code, _ = self.run_log("4", "step 1 committed")
