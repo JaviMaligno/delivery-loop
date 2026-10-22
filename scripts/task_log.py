@@ -80,7 +80,10 @@ def _remerge_missing(task: Path, phase: str) -> Path | None:
     if not merge_file.is_file():
         return merge_file
     if owner_at >= 0:
-        changed = datetime.strptime(log[owner_at][2:22], TIME_FORMAT).replace(tzinfo=timezone.utc)
+        try:
+            changed = datetime.strptime(log[owner_at][2:22], TIME_FORMAT).replace(tzinfo=timezone.utc)
+        except ValueError:  # a hand-typed line from an older task file: its time cannot be trusted
+            return None
         if datetime.fromtimestamp(merge_file.stat().st_mtime, timezone.utc) < changed:
             return merge_file
     return None
