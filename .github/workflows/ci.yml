@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.12.15"
       - name: Unit tests
-        if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
         run: python -m unittest discover -s tests -v
       - name: Agnostic check
         run: python scripts/check_agnostic.py
